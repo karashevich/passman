@@ -1,0 +1,1 @@
+<?xml version="1.0" ?><com.company.PassClass><link>vk.com</link><login>login</login><pass>pass</pass></com.company.PassClass>

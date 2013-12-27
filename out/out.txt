@@ -1,0 +1,1 @@
+<?xml version="1.0" ?><com.company.PassClass><link>1</link><login>2</login><pass>3</pass></com.company.PassClass>
