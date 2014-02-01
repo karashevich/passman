@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="passman:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/passman_jar</output-path>
+    <root id="archive" name="passman.jar">
+      <element id="module-output" name="passman" />
+      <element id="library" level="project" name="lib" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/xstream-1.4.6/lib/xstream-1.4.6.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

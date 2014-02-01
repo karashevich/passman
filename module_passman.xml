@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_passman" default="compile.module.passman">
+  <dirname property="module.passman.basedir" file="${ant.file.module_passman}"/>
+  
+  <property name="module.jdk.home.passman" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.passman" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.passman" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.passman" value="${compiler.args}"/>
+  
+  <property name="passman.output.dir" value="${module.passman.basedir}/out/production/passman"/>
+  <property name="passman.testoutput.dir" value="${module.passman.basedir}/out/test/passman"/>
+  
+  <path id="passman.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="passman.module.production.classpath">
+    <path refid="${module.jdk.classpath.passman}"/>
+    <path refid="library.lib.classpath"/>
+    <path refid="library.xstream-1.4.6.classpath"/>
+  </path>
+  
+  <path id="passman.runtime.production.module.classpath">
+    <pathelement location="${passman.output.dir}"/>
+    <path refid="library.lib.classpath"/>
+    <path refid="library.xstream-1.4.6.classpath"/>
+  </path>
+  
+  <path id="passman.module.classpath">
+    <path refid="${module.jdk.classpath.passman}"/>
+    <pathelement location="${passman.output.dir}"/>
+    <path refid="library.lib.classpath"/>
+    <path refid="library.xstream-1.4.6.classpath"/>
+  </path>
+  
+  <path id="passman.runtime.module.classpath">
+    <pathelement location="${passman.testoutput.dir}"/>
+    <pathelement location="${passman.output.dir}"/>
+    <path refid="library.lib.classpath"/>
+    <path refid="library.xstream-1.4.6.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.passman">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.passman">
+    <patternset refid="excluded.from.module.passman"/>
+  </patternset>
+  
+  <path id="passman.module.sourcepath">
+    <dirset dir="${module.passman.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.passman" depends="compile.module.passman.production,compile.module.passman.tests" description="Compile module passman"/>
+  
+  <target name="compile.module.passman.production" depends="register.custom.compilers" description="Compile module passman; production classes">
+    <mkdir dir="${passman.output.dir}"/>
+    <javac2 destdir="${passman.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.passman}/javac">
+      <compilerarg line="${compiler.args.passman}"/>
+      <bootclasspath refid="passman.module.bootclasspath"/>
+      <classpath refid="passman.module.production.classpath"/>
+      <src refid="passman.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.passman"/>
+    </javac2>
+    
+    <copy todir="${passman.output.dir}">
+      <fileset dir="${module.passman.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.passman.tests" depends="register.custom.compilers,compile.module.passman.production" description="compile module passman; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.passman" description="cleanup module">
+    <delete dir="${passman.output.dir}"/>
+    <delete dir="${passman.testoutput.dir}"/>
+  </target>
+</project>

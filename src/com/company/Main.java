@@ -2,67 +2,59 @@ package com.company;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
-import org.omg.CORBA.FREE_MEM;
 
 import java.io.*;
 
 public class Main {
 
+    final static String dataPath = "./data.xml";
 
-    public static void main(String[] args) throws IOException {
-
+    private static PassClass readPassClass(String s0, String s1, String s2) throws Exception{
 
         PassClass newPass;
+        newPass = new PassClass(s0, s1, s2);
+
+        return newPass;
+    }
+
+
+    public static void main(String[] args) throws Exception {
+
+        PassClass newPass;
+
+        DataPassClass dpc = new DataPassClass();
+
 
         if(args.length == 3){
 
             //In case of 3 args, trying to define values
-            //Check rules for the link
-            newPass = new PassClass(args[0],args[1],args[2]);
+            newPass = readPassClass(args[0], args[1], args[2]);
 
-            //Checking validity
-            System.out.println(newPass);
-
-            //Serializing record newPass to XML xstream
-            XStream xstream = new XStream(new StaxDriver());
-            String xml = xstream.toXML(newPass);
-
-            System.out.println(xml);
-
-            //Saving XML to a new file
-            String outPath = "out/in.txt";
-            FileWriter fw = new FileWriter(outPath);
+            // Try to find data file
             try{
-                fw.write(xml);
-                fw.close();
+                dpc.loadFromFile(dataPath);
             } catch (IOException e) {
-                System.out.println("Main.main: IOException by saving file to " + outPath);
-                throw e;
-            } finally {
-                fw.close();
+                System.out.println("Attention! File 'data.xml' didn't find, passman will start without passwords history!");
             }
 
-            //Trying to read XML to new record
-            String inPath = "in/in.txt";
-            BufferedReader br = new BufferedReader(new FileReader(inPath));
-            String everything;
+            dpc.addPC(newPass);
+            System.out.println("DataPassClass:" + dpc);
+
+            dpc.addPC(readPassClass("vk.com", "bla@mail.ru", "blablabla"));
+            System.out.println("DataPassClass last:" + dpc);
+
 
             try {
-                StringBuilder sb = new StringBuilder();
-                String line = br.readLine();
+                dpc.saveToFile(dataPath);
 
-                while (line != null) {
-                    sb.append(line);
-                    sb.append('\n');
-                    line = br.readLine();
-                }
-                 everything = sb.toString();
+            } catch (IOException e) {
 
-            } finally {
-                br.close();
+                e.printStackTrace();
+                System.out.println("Attention! File data.xml' didn't find. Trying to create a new one.");
+
+                File f = new File(dataPath);
+                f.createNewFile();
             }
-            newPass = (PassClass) xstream.fromXML(everything);
-            System.out.println(newPass);
 
         } else {
 
@@ -71,11 +63,6 @@ public class Main {
                 System.out.println("Manual:\n  password.jar link login password");
                 return;
         }
-
-
-
-
-
 
     }
 }
