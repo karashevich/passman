@@ -52,7 +52,7 @@ public class DataPassClass {
             fw.write(xml);
             fw.close();
 
-            System.out.println("DataPassClass.saveToFile: Class is saved.");
+//            System.out.println("DataPassClass.saveToFile: Class is saved.");
 
         } catch (IOException e) {
 
@@ -82,7 +82,7 @@ public class DataPassClass {
             }
             everything = sb.toString();
 
-        System.out.println("DataPassClass.loadFromFile: Class is loaded.");
+//        System.out.println("DataPassClass.loadFromFile: Class is loaded.");
 
         } catch (IOException e) {
 

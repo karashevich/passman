@@ -24,45 +24,66 @@ public class Main {
 
         DataPassClass dpc = new DataPassClass();
 
+        // Try to find and load data file
+        try{
+            dpc.loadFromFile(dataPath);
+        } catch (IOException e) {
+            System.out.println("Attention! File 'data.xml' didn't find, passman will start without passwords history!");
+        }
 
-        if(args.length == 3){
+        if(args.length == 4) {
 
-            //In case of 3 args, trying to define values
-            newPass = readPassClass(args[0], args[1], args[2]);
+            if (args[0].equals("-add")){
 
-            // Try to find data file
-            try{
-                dpc.loadFromFile(dataPath);
-            } catch (IOException e) {
-                System.out.println("Attention! File 'data.xml' didn't find, passman will start without passwords history!");
+                newPass = readPassClass(args[0], args[1], args[2]);
+                dpc.addPC(newPass);
+
             }
+        } if(args.length == 2) {
 
-            dpc.addPC(newPass);
-            System.out.println("DataPassClass:" + dpc);
+            if (args[0].equals("-del")) {
 
-            dpc.addPC(readPassClass("vk.com", "bla@mail.ru", "blablabla"));
-            System.out.println("DataPassClass last:" + dpc);
+                dpc.delPC(args[1]);
 
+            } if (args[0].equals("-show")) {
 
-            try {
-                dpc.saveToFile(dataPath);
+                System.out.println(dpc.getPC(args[1]));
 
-            } catch (IOException e) {
+            }
+        } if(args.length == 1) {
 
-                e.printStackTrace();
-                System.out.println("Attention! File data.xml' didn't find. Trying to create a new one.");
+            if (args[0].equals("-showall")) {
 
-                File f = new File(dataPath);
-                f.createNewFile();
+                System.out.println(dpc);
+
+            } if ((args[0].equals("-help")) || (args[0].equals("-?"))) {
+                System.out.println("Passman help: \n" +
+                        "     passman.jar <command> <args> \n" +
+                        "     -add          add a new record.    passman.jar -add <link> <login> <password> \n" +
+                        "     -del          delete some record.  passman.jar -del <link> \n" +
+                        "     -show         show some record.    passman.jar -show <link> \n" +
+                        "     -showall      show all records.    passman.jar -showall \n" +
+                        "     -? -help      print this help message \n");
             }
 
         } else {
-
-            //In case of user requests manual
-            if ((args.length == 1) && (args[0].equals("?")))
-                System.out.println("Manual:\n  password.jar link login password");
-                return;
+//                System.out.println("Unknown command, please read the help: passman.jar -? or passman.jar -help");
         }
 
+
+
+        try {
+            dpc.saveToFile(dataPath);
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+            System.out.println("Attention! File data.xml' didn't find. Trying to create a new one.");
+
+            File f = new File(dataPath);
+            f.createNewFile();
+
+            dpc.saveToFile(dataPath);
+        }
     }
 }
