@@ -57,7 +57,7 @@
   </path>
   
   
-  <target name="compile.module.passman" depends="compile.module.passman.production,compile.module.passman.tests" description="Compile module passman"/>
+  <target name="compile.module.passman" depends="compile.module.passman.production,compile.module.passman.com.company.tests" description="Compile module passman"/>
   
   <target name="compile.module.passman.production" depends="register.custom.compilers" description="Compile module passman; production classes">
     <mkdir dir="${passman.output.dir}"/>
@@ -77,7 +77,7 @@
     </copy>
   </target>
   
-  <target name="compile.module.passman.tests" depends="register.custom.compilers,compile.module.passman.production" description="compile module passman; test classes" unless="skip.tests"/>
+  <target name="compile.module.passman.com.company.tests" depends="register.custom.compilers,compile.module.passman.production" description="compile module passman; test classes" unless="skip.com.company.tests"/>
   
   <target name="clean.module.passman" description="cleanup module">
     <delete dir="${passman.output.dir}"/>

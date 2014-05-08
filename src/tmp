@@ -1,0 +1,39 @@
+package com.company;
+
+import com.company.security.Hasher;
+
+import java.io.Console;
+
+/**
+ * Created by jetbrains on 5/7/14.
+ */
+public class TryConsole {
+
+    public static void passwordExample() {
+
+        Console console = System.console();
+
+        if (console == null) {
+            System.out.println("Couldn't get Console instance");
+            System.exit(0);
+        }
+
+        console.printf("Testing password%n");
+        char passwordArray[] = console.readPassword("Enter your secret password: ");
+        console.printf("Password entered was: %s%n", new String(passwordArray));
+
+    }
+
+    public static void main(String[] args) {
+
+
+        passwordExample();
+        long startTime = System.currentTimeMillis();
+        System.out.println("Time is  =" + startTime);
+
+
+
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println("The diff is:" + (estimatedTime));
+    }
+}

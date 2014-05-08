@@ -25,7 +25,7 @@ Documentation can be found in docs/index.html. This includes:
 
 The complete source for XStream is bundled. This includes:
  * Main API [src/java]
- * Unit tests [src/test]
+ * Unit com.company.tests [src/test]
  * Maven build files [pom.xml] 
  * Dependencies [lib]
 
