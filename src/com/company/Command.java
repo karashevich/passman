@@ -15,21 +15,22 @@ public abstract class Command {
 
     private CommandType cmdtype = null;
 
-    private final String description = null;
+    private String indescription = null;
 
-    public Command(@NotNull CommandType cmdtype){
+    public Command(@NotNull CommandType cmdtype, @NotNull String description){
         this.cmdtype = cmdtype;
+        this.indescription = description;
     }
 
 
-    protected abstract void execute(DataPassClass dpc, String args[]);
+    public abstract void execute(DataPassClass dpc, String args[]);
 
     public CommandType getType(){
         return cmdtype;
     }
 
     public String getDescription(){
-        return description;
+        return indescription;
     }
 
 }

@@ -20,11 +20,11 @@ public class AddCommand extends Command {
     }
 
     public AddCommand() {
-        super(CommandType.ADD);
+        super(CommandType.ADD, description);
     }
 
     @Override
-    protected void execute(DataPassClass dpc, String[] args) {
+    public void execute(DataPassClass dpc, String[] args) {
         PassClass newPass;
 
         try {

@@ -43,9 +43,10 @@ public class CommandFactory {
 
                 case SETPASS:
                     return new SetPassCommand();
+
+                default:
+                    return new NoCommand();
             }
         }
-
-        return new NoCommand();
     }
 }

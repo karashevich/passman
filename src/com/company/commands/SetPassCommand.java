@@ -14,11 +14,11 @@ public class SetPassCommand extends Command {
 
 
     public SetPassCommand() {
-        super(CommandType.SETPASS);
+        super(CommandType.SETPASS, description);
     }
 
     @Override
-    protected void execute(DataPassClass dpc, String[] args) {
+    public void execute(DataPassClass dpc, String[] args) {
         PassClass newPass;
 
 

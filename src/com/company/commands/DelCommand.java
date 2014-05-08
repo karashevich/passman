@@ -11,11 +11,11 @@ public class DelCommand extends Command {
     private static final String description= " -del          delete some record.  passman.jar -del <link>";
 
     public DelCommand() {
-        super(CommandType.DEL);
+        super(CommandType.DEL, description);
     }
 
     @Override
-    protected void execute(DataPassClass dpc, String[] args) {
+    public void execute(DataPassClass dpc, String[] args) {
         dpc.delPC(args[1]);
     }
 }

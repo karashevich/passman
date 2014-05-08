@@ -134,9 +134,22 @@ public class DataPassClass {
 
     @Override
     public String toString() {
-        return "DataPassClass{" +
-                "dataDPC=" + dataDPC +
-                '}';
+
+        StringBuilder sb = new StringBuilder();
+
+        for (PassClass passClass : dataDPC.values()) {
+            sb.append("  Link: \"").append(passClass.getLink()).append("\" Login: \"").append(passClass.getLogin());
+            if (isEncrypted) {
+                sb.append("\" Password: ******");
+            } else {
+                sb.append("\" Password: \"").append(passClass.getPass()).append("\"");
+            }
+            sb.append("\n");
+        }
+
+        return "DataPassClass:\n" +
+                "Entries:" + dataDPC.size() + "\n" +
+                new String(sb);
     }
 
     @Override
@@ -171,10 +184,7 @@ public class DataPassClass {
                     DesEncrypter de = new DesEncrypter(password);
                     DesEncrypter deold = new DesEncrypter(old_password);
 
-                    newPassClass = new PassClass(passClass.getLink(), passClass.getLogin(), de.encrypt(deold.decrypt(passClass.getPass())));
-
-                    delPC(passClass.getLink());
-                    addPC(newPassClass);
+                    passClass.updatePass(de.encrypt(deold.decrypt(passClass.getPass())));
 
 
                 } catch (Exception e) {
@@ -193,11 +203,7 @@ public class DataPassClass {
                 try {
 
                     DesEncrypter de = new DesEncrypter(password);
-                    newPassClass = new PassClass(passClass.getLink(), passClass.getLogin(), de.encrypt(passClass.getPass()));
-
-                    delPC(passClass.getLink());
-                    addPC(newPassClass);
-
+                    passClass.updatePass(de.encrypt(passClass.getPass()));
 
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -12,11 +12,11 @@ public class NoCommand extends Command {
 
 
     public NoCommand() {
-        super(CommandType.NOCOMMAND);
+        super(CommandType.NOCOMMAND, description);
     }
 
     @Override
-    protected void execute(DataPassClass dpc, String[] args) {
+    public void execute(DataPassClass dpc, String[] args) {
         System.out.println(getDescription());
     }
 }

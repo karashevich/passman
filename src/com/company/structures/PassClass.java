@@ -47,6 +47,10 @@ public final class PassClass {
         return pass;
     }
 
+    protected void updatePass(String newPass){
+        this.pass = newPass;
+    }
+
     @Override
     public String toString() {
         return "PassClass{" +
