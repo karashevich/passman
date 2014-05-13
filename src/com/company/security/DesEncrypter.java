@@ -1,5 +1,7 @@
 package com.company.security;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -23,7 +25,7 @@ public class DesEncrypter {
         dcipher.init(Cipher.DECRYPT_MODE, desKey);
     }
 
-    public DesEncrypter(Password password) throws Exception {
+    public DesEncrypter(@NotNull Password password) throws Exception {
 
         DESKeySpec dks = new DESKeySpec(password.getPassword().getBytes());
         SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");

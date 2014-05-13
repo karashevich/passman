@@ -1,6 +1,7 @@
 package com.company;
 
 import com.company.commands.CommandType;
+import com.company.security.Password;
 import com.company.structures.DataPassClass;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +24,7 @@ public abstract class Command {
     }
 
 
-    public abstract void execute(DataPassClass dpc, String args[]);
+    public abstract void execute(DataPassClass dpc, String args[], Password password);
 
     public CommandType getType(){
         return cmdtype;

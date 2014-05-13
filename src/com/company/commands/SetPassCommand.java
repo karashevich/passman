@@ -1,6 +1,7 @@
 package com.company.commands;
 
 import com.company.Command;
+import com.company.security.ConsolePassword;
 import com.company.security.Password;
 import com.company.structures.DataPassClass;
 import com.company.structures.PassClass;
@@ -10,7 +11,7 @@ import com.company.structures.PassClass;
  */
 public class SetPassCommand extends Command {
 
-    private static final String description = "-setpass     add a new record.    passman.jar -setpass password";
+    private static final String description = "-setpass     add a new record.    passman.jar -setpass";
 
 
     public SetPassCommand() {
@@ -18,13 +19,9 @@ public class SetPassCommand extends Command {
     }
 
     @Override
-    public void execute(DataPassClass dpc, String[] args) {
-        PassClass newPass;
-
+    public void execute(DataPassClass dpc, String[] args, Password password) {
 
         try {
-            Password password = new Password(args[1]);
-
             dpc.setPassword(password, password);
         } catch (Exception e) {
             e.printStackTrace();

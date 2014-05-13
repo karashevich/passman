@@ -1,5 +1,6 @@
 package com.company.security;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -22,7 +23,7 @@ public class Hasher {
         }
         catch(NoSuchAlgorithmException e)
         {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         catch(UnsupportedEncodingException e)
         {

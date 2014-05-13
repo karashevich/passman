@@ -1,10 +1,12 @@
 package com.company.structures;
 
+import com.company.security.ConsolePassword;
 import com.company.security.DesEncrypter;
 import com.company.security.Hasher;
 import com.company.security.Password;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -21,6 +23,10 @@ public class DataPassClass {
     private TreeMap<String, PassClass> dataDPC; // dataDPC - main data holder based on tree map. key = link, value = PassClass
     private String passHash = "";
     private boolean isEncrypted = false;
+
+    public boolean isEncrypted() {
+        return isEncrypted;
+    }
 
     public DataPassClass() {
         this.dataDPC = new TreeMap<String, PassClass>();
@@ -42,6 +48,35 @@ public class DataPassClass {
 
     public PassClass getPC(String s){
         return dataDPC.get(s);
+    }
+
+
+    public PassClass getPC(String s, @Nullable Password password){
+
+
+        if (password != null && isEncrypted) {
+            try {
+
+                while(!checkPassword(password)){
+                    password.getPassword();
+                }
+
+                DesEncrypter des = new DesEncrypter(password);
+                PassClass pc = new PassClass(dataDPC.get(s).getLink(), dataDPC.get(s).getLogin(),  des.decrypt(dataDPC.get(s).getPass()));
+
+                return pc;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return dataDPC.get(s);
+            }
+        } else {
+
+            return dataDPC.get(s);
+
+        }
+
+
     }
 
 
@@ -171,7 +206,6 @@ public class DataPassClass {
 
     public void setPassword(Password password, Password old_password){
 
-        PassClass newPassClass;
 
         if (isEncrypted) {
 
@@ -195,8 +229,15 @@ public class DataPassClass {
 
         } else {
 
+            try {
+                password = new ConsolePassword();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             passHash = Hasher.encryptPassword(password);
             isEncrypted = true;
+
 
             for (PassClass passClass : dataDPC.values()) {
 
@@ -210,6 +251,23 @@ public class DataPassClass {
                 }
 
             }
+        }
+    }
+
+    /**
+     *
+     * @param password
+     * @return true if password is ok or not encrypted, else return false;
+     */
+    private boolean checkPassword(Password password){
+
+        if (!isEncrypted) return true;
+        if (Hasher.encryptPassword(password).equals(this.passHash)) {
+            return true;
+        } else {
+            System.out.println("Entered password is incorrect");
+            return false;
+
         }
     }
 

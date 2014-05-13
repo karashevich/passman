@@ -5,7 +5,7 @@ package com.company.preferences;
  */
 public class Preferences {
 
-    private static final String version = "0.12";
+    private static final String version = "0.24";
     final static String dataPath = "./data.xml";
 
     public static String getVersion() {

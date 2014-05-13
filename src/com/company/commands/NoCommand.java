@@ -1,6 +1,7 @@
 package com.company.commands;
 
 import com.company.Command;
+import com.company.security.Password;
 import com.company.structures.DataPassClass;
 
 /**
@@ -16,7 +17,7 @@ public class NoCommand extends Command {
     }
 
     @Override
-    public void execute(DataPassClass dpc, String[] args) {
+    public void execute(DataPassClass dpc, String[] args, Password password) {
         System.out.println(getDescription());
     }
 }

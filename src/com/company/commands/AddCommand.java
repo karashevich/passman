@@ -1,6 +1,7 @@
 package com.company.commands;
 
 import com.company.Command;
+import com.company.security.Password;
 import com.company.structures.DataPassClass;
 import com.company.structures.PassClass;
 
@@ -24,10 +25,17 @@ public class AddCommand extends Command {
     }
 
     @Override
-    public void execute(DataPassClass dpc, String[] args) {
+    public void execute(DataPassClass dpc, String[] args, Password password) {
+
         PassClass newPass;
 
         try {
+
+            if (args.length < 4) {
+                System.out.println("Oh, poor! You should write more arguments!");
+                return;
+            }
+
             newPass = readPassClass(args[1], args[2], args[3]);
             dpc.addPC(newPass);
         } catch (Exception e) {
