@@ -1,5 +1,7 @@
 package com.company.tests;
 
+import com.company.console.CUI;
+import com.company.security.PasswordStorage;
 import com.company.structures.DataPassClass;
 import com.company.structures.PassClass;
 import org.junit.Test;
@@ -17,9 +19,11 @@ public class DataPassClassTest {
     public void testAddPC() throws Exception {
         PassClass pc = new PassClass("link1", "login1", "pass1");
         DataPassClass dpcTest = new DataPassClass();
+        PasswordStorage ps = null;
+        CUI cui = null;
 
         try {
-            dpcTest.addPC(pc);
+            dpcTest.addPC(pc, ps, cui);
             if (dpcTest.size() == 0) {
                 fail("New entry haven't been added.");
             }
@@ -34,8 +38,10 @@ public class DataPassClassTest {
     public void testDelPc() throws Exception {
         PassClass pc = new PassClass("link1", "login1", "pass1");
         DataPassClass dpcTest = new DataPassClass();
+        PasswordStorage ps = null;
+        CUI cui = null;
 
-        dpcTest.addPC(pc);
+        dpcTest.addPC(pc, ps, cui);
 
         try {
             dpcTest.delPC("link1");
@@ -53,8 +59,10 @@ public class DataPassClassTest {
 
         PassClass pc = new PassClass("link1", "login1", "pass1");
         DataPassClass dpcTest = new DataPassClass();
+        PasswordStorage ps = null;
+        CUI cui = null;
 
-        dpcTest.addPC(pc);
+        dpcTest.addPC(pc, ps, cui);
         try {
             PassClass result = dpcTest.getPC("link1");
             assertSame(result, pc);
@@ -70,10 +78,12 @@ public class DataPassClassTest {
 
         PassClass pc = new PassClass("link1", "login1", "pass1");
         DataPassClass dpcTest = new DataPassClass();
+        PasswordStorage ps = null;
+        CUI cui = null;
 
 
         try {
-            dpcTest.addPC(pc);
+            dpcTest.addPC(pc, ps, cui);
             dpcTest.saveToFile("data/testData.xml");
         } catch (IOException e) {
             fail("Method saveToFile has raised exception.");

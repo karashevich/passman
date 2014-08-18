@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Formatter;
 
 /**
@@ -11,23 +12,19 @@ import java.util.Formatter;
  */
 public class Hasher {
 
-    public static String encryptPassword(Password password) {
+    public static byte[] encryptPassword(byte[] password) {
 
-        String sha1 = "";
+        byte[] sha1 = null;
         try
         {
             MessageDigest crypt = MessageDigest.getInstance("SHA-1");
             crypt.reset();
-            crypt.update(password.getPassword().getBytes("UTF-8"));
-            sha1 = byteToHex(crypt.digest());
+            crypt.update(password);
+            sha1 = crypt.digest();
         }
         catch(NoSuchAlgorithmException e)
         {
             throw new RuntimeException(e);
-        }
-        catch(UnsupportedEncodingException e)
-        {
-            e.printStackTrace();
         }
         catch (Exception e){
             e.printStackTrace();
@@ -35,17 +32,29 @@ public class Hasher {
         return sha1;
     }
 
-    protected static String byteToHex(final byte[] hash)
-    {
-        Formatter formatter = new Formatter();
+//    protected static String byteToHex(final byte[] hash)
+//    {
+//        Formatter formatter = new Formatter();
+//
+//        for (byte b : hash)
+//        {
+//            formatter.format("%02x", b);
+//        }
+//
+//        String result = formatter.toString();
+//        formatter.close();
+//        return result;
+//    }
 
-        for (byte b : hash)
-        {
-            formatter.format("%02x", b);
-        }
+    public static void main(String[] args) {
+        String s1 = "12345678";
+        String s2 = "12345679";
 
-        String result = formatter.toString();
-        formatter.close();
-        return result;
+        byte[] b1 = s1.getBytes();
+        byte[] b2 = s2.getBytes();
+
+        System.out.println("s1 hash:" + Arrays.toString(Hasher.encryptPassword(b1)));
+        System.out.println("s2 hash:" + Arrays.toString(Hasher.encryptPassword(b2)));
     }
+
 }

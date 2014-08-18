@@ -1,7 +1,8 @@
 package com.company.commands;
 
 import com.company.Command;
-import com.company.security.Password;
+import com.company.UI;
+import com.company.security.PasswordStorage;
 import com.company.structures.DataPassClass;
 import com.company.structures.PassClass;
 
@@ -17,7 +18,7 @@ public class ShowCommand extends Command {
     }
 
     @Override
-    public void execute(DataPassClass dpc, String[] args, Password password) {
+    public void execute(DataPassClass dpc, String[] args, PasswordStorage ps, UI ui) {
 
         if (args.length < 2) {
             System.out.println("Oh, poor! You should write more arguments!");
@@ -27,7 +28,7 @@ public class ShowCommand extends Command {
         StringBuilder sb = new StringBuilder();
         String link = args[1];
 
-        PassClass pc = dpc.getPC(link, password);
+        PassClass pc = dpc.getPC(link, ps, ui);
         if (pc == null){
             System.out.println("Unfortunately I cannot remember such resources.");
             return;

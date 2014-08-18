@@ -1,7 +1,8 @@
 package com.company.commands;
 
 import com.company.Command;
-import com.company.security.Password;
+import com.company.UI;
+import com.company.security.PasswordStorage;
 import com.company.structures.DataPassClass;
 import com.company.structures.PassClass;
 
@@ -25,7 +26,7 @@ public class AddCommand extends Command {
     }
 
     @Override
-    public void execute(DataPassClass dpc, String[] args, Password password) {
+    public void execute(DataPassClass dpc, String[] args, PasswordStorage ps, UI ui) {
 
         PassClass newPass;
 
@@ -37,7 +38,7 @@ public class AddCommand extends Command {
             }
 
             newPass = readPassClass(args[1], args[2], args[3]);
-            dpc.addPC(newPass);
+            dpc.addPC(newPass, ps, ui);
         } catch (Exception e) {
             e.printStackTrace();
         }

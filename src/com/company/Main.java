@@ -74,6 +74,8 @@ public class Main {
 //            dpc.saveToFile(dataPath);
 //        }
 
-        CUI.init();
+        CUI cui = new CUI();
+
+        cui.init();
     }
 }

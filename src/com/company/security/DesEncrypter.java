@@ -13,9 +13,9 @@ public class DesEncrypter {
     Cipher ecipher;
     Cipher dcipher;
 
-    public DesEncrypter(String password) throws Exception {
+    public DesEncrypter(byte[] password) throws Exception {
 
-        DESKeySpec dks = new DESKeySpec(password.getBytes());
+        DESKeySpec dks = new DESKeySpec(password);
         SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");
         SecretKey desKey = skf.generateSecret(dks);
 
@@ -27,7 +27,7 @@ public class DesEncrypter {
 
     public DesEncrypter(@NotNull Password password) throws Exception {
 
-        DESKeySpec dks = new DESKeySpec(password.getPassword().getBytes());
+        DESKeySpec dks = new DESKeySpec(password.getPassword());
         SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");
         SecretKey desKey = skf.generateSecret(dks);
 
@@ -70,22 +70,25 @@ public class DesEncrypter {
         return new String(utf8, "UTF8");
     }
 
-//    public static void main(String[] argv) throws Exception {
-//
-//        String password = "sq";
-//        DESKeySpec dks = new DESKeySpec(password.getBytes());
-//        SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");
-//        SecretKey desKey = skf.generateSecret(dks);
-//
-//
-//        DesEncrypter encrypter = new DesEncrypter(desKey);
-//
-//        String message = "Don't tell anybody!";
-//        String encrypted = encrypter.encrypt(message);
-//        String decrypted = encrypter.decrypt(encrypted);
-//
-//        System.out.println(message);
-//        System.out.println(encrypted);
-//        System.out.println(decrypted);
-//    }
+    public static void main(String[] argv) throws Exception {
+
+        String password1 = "123456784356";
+        String password2 = "1234567945634";
+
+        DESKeySpec dks = new DESKeySpec(password1.getBytes());
+        SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");
+        SecretKey desKey = skf.generateSecret(dks);
+
+
+        DesEncrypter encrypter1 = new DesEncrypter(password1.getBytes());
+        DesEncrypter encrypter2 = new DesEncrypter(password2.getBytes());
+
+        String message = "pass1";
+        String encrypted = encrypter1.encrypt(message);
+        String decrypted = encrypter2.decrypt(encrypted);
+
+        System.out.println(message);
+        System.out.println(encrypted);
+        System.out.println(decrypted);
+    }
 }

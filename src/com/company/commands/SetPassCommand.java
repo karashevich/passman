@@ -1,10 +1,9 @@
 package com.company.commands;
 
 import com.company.Command;
-import com.company.security.ConsolePassword;
-import com.company.security.Password;
+import com.company.UI;
+import com.company.security.PasswordStorage;
 import com.company.structures.DataPassClass;
-import com.company.structures.PassClass;
 
 /**
  * Created by jetbrains on 3/18/14.
@@ -19,10 +18,10 @@ public class SetPassCommand extends Command {
     }
 
     @Override
-    public void execute(DataPassClass dpc, String[] args, Password password) {
+    public void execute(DataPassClass dpc, String[] args, PasswordStorage ps, UI ui) {
 
         try {
-            dpc.setPassword(password, password);
+            dpc.setPassword(ps, ui);
         } catch (Exception e) {
             e.printStackTrace();
         }

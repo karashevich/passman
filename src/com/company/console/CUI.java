@@ -1,37 +1,89 @@
 package com.company.console;
 
-import com.company.Command;
 import com.company.CommandFactory;
+import com.company.UI;
+import com.company.preferences.Mode;
 import com.company.preferences.Preferences;
-import com.company.security.ConsolePassword;
-import com.company.security.Password;
+import com.company.security.*;
 import com.company.structures.DataPassClass;
-import com.sun.tools.doclets.internal.toolkit.util.SourceToHTMLConverter;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.lang.reflect.Array;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.util.Arrays;
 
 /**
  * Created by jetbrains on 5/8/14.
  * Console User Interface
  */
-public class CUI {
+public class CUI implements UI{
 
-    public static void init() {
+    private byte[] toBytes(char[] chars) {
+        CharBuffer charBuffer = CharBuffer.wrap(chars);
+        ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
+        byte[] bytes = Arrays.copyOfRange(byteBuffer.array(),
+                byteBuffer.position(), byteBuffer.limit());
+        Arrays.fill(charBuffer.array(), '\u0000'); // clear sensitive data
+        Arrays.fill(byteBuffer.array(), (byte) 0); // clear sensitive data
+        return bytes;
+    }
+
+    @Override
+    public byte[] readPassword() {
+
+
+        if (Preferences.runmode == Mode.TEST){
+
+            System.out.print("TESTING MODE!!! Enter your secret password:");
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+            try {
+                return br.readLine().getBytes();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            Console console = System.console();
+
+            if (console == null) {
+                System.out.println("Couldn't get Console instance");
+                System.exit(0);
+
+            }
+
+            char passwordArray[] = new char[0];
+            passwordArray = console.readPassword("Enter your secret password: ");
+
+            while (passwordArray.length < 8) {
+
+                console.printf("Password should have at least 8 characters. Please try again.");
+                passwordArray = console.readPassword("Enter your secret password: ");
+
+            }
+
+            return toBytes(passwordArray);
+        }
+
+        return null;
+    }
+
+    public  void init() {
 
         @Nullable
-        Password password = null;
+        PasswordStorage ps = new PasswordStorage(null);
 
         System.out.println("*******************");
-        System.out.println("Hello from passman!");
+        System.out.println("Hello from Passman!");
         System.out.println("*******************");
 
         System.out.println("Version: " + Preferences.getVersion());
-        System.out.println("Type '?' to ask passman how to deal with him.");
+        System.out.println("Type '?' to ask Passman how to deal with him.");
         System.out.println("*******************");
 
         //Loading DataPassClass
@@ -45,14 +97,18 @@ public class CUI {
 
             if (dpc.isEncrypted()) {
                 try {
-                    password = new ConsolePassword();
+                    System.out.println("My mind is encrypted, please remember your password:");
+                    ps = new PasswordStorage(new Password(readPassword()));
+
+                    while(!Arrays.equals(dpc.getPassHash(), ps.getPasshash())){
+                        print("Incorrect password, try again. ");
+                        ps.setPassword(readPassword());
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            } else {
-                password = null;
             }
-
 
             // Cannot read from file or not such file
         } catch (IOException e) {
@@ -114,7 +170,7 @@ public class CUI {
 
                         if (commandLineArray.length >= 1) {
                             String s = commandLineArray[0].substring(1);
-                            commandFactory.buildCommand(commandLineArray).execute(dpc, commandLineArray, password);
+                            commandFactory.buildCommand(commandLineArray).execute(dpc, commandLineArray, ps, this);
 
                         } else {
                             System.out.println("Unknown command, please read the help: ?");
@@ -130,6 +186,10 @@ public class CUI {
 
             }
         }
+    }
+
+    public void print(String in){
+        System.out.print(in);
     }
 
     private static void man() {

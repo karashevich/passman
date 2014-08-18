@@ -1,9 +1,8 @@
 package com.company.structures;
 
-import com.company.security.ConsolePassword;
-import com.company.security.DesEncrypter;
-import com.company.security.Hasher;
-import com.company.security.Password;
+import com.company.UI;
+import com.company.security.*;
+import com.sun.tools.doclets.internal.toolkit.util.SourceToHTMLConverter;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import org.jetbrains.annotations.Nullable;
@@ -12,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.TreeMap;
 
 /**
@@ -20,8 +20,9 @@ import java.util.TreeMap;
  */
 public class DataPassClass {
 
+
     private TreeMap<String, PassClass> dataDPC; // dataDPC - main data holder based on tree map. key = link, value = PassClass
-    private String passHash = "";
+    private byte[] passHash = null;
     private boolean isEncrypted = false;
 
     public boolean isEncrypted() {
@@ -36,8 +37,27 @@ public class DataPassClass {
      *
      * @param pc - element to add to main data holder
      */
-    public void addPC(PassClass pc){
-        dataDPC.put(pc.getLink(), pc);
+    public void addPC(PassClass pc, PasswordStorage ps, UI ui){
+
+        if (!isEncrypted()) {
+            dataDPC.put(pc.getLink(), pc);
+        } else {
+
+
+            DesEncrypter des = null;
+
+            try {
+
+                des = new DesEncrypter(PasswordGetter.getPassword(ui, ps, passHash));
+                PassClass encryptedpc = new PassClass(pc.getLink(), pc.getLogin(),  des.encrypt(pc.getPass()));
+                dataDPC.put(encryptedpc.getLink(), encryptedpc);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
     }
 
     /**
@@ -51,17 +71,19 @@ public class DataPassClass {
     }
 
 
-    public PassClass getPC(String s, @Nullable Password password){
+    public @Nullable PassClass getPC(String s, @Nullable PasswordStorage ps, UI ui){
 
+        if (!dataDPC.containsKey(s)) {
+            return null;
+        }
 
-        if (password != null && isEncrypted) {
+        if (isEncrypted) {
             try {
 
-                while(!checkPassword(password)){
-                    password.getPassword();
-                }
+                Password pass = PasswordGetter.getPassword(ui, ps, passHash);
+                if (pass == null) System.err.println("ACHTUNG!!!");
 
-                DesEncrypter des = new DesEncrypter(password);
+                DesEncrypter des = new DesEncrypter(pass);
                 PassClass pc = new PassClass(dataDPC.get(s).getLink(), dataDPC.get(s).getLogin(),  des.decrypt(dataDPC.get(s).getPass()));
 
                 return pc;
@@ -70,6 +92,7 @@ public class DataPassClass {
                 e.printStackTrace();
                 return dataDPC.get(s);
             }
+
         } else {
 
             return dataDPC.get(s);
@@ -204,19 +227,32 @@ public class DataPassClass {
         return true;
     }
 
-    public void setPassword(Password password, Password old_password){
+    public void setPassword(PasswordStorage ps, UI ui){
 
 
         if (isEncrypted) {
 
-            passHash = Hasher.encryptPassword(password);
+            ui.print("Please, enter current password:");
+            Password curPass = new Password(ui.readPassword());
+
+
+            while(ps.checkPassword(curPass)) {
+                System.out.println("Entered password is incorrect, please try again!");
+                curPass = new Password(ui.readPassword());
+            }
+
+            ui.print("Please, enter new password:");
+            byte[] newPass = ui.readPassword();
+
+            passHash = Hasher.encryptPassword(newPass);
+            ps.setPassword(newPass);
 
             for (PassClass passClass : dataDPC.values()) {
 
                 try {
 
-                    DesEncrypter de = new DesEncrypter(password);
-                    DesEncrypter deold = new DesEncrypter(old_password);
+                    DesEncrypter de = new DesEncrypter(newPass);
+                    DesEncrypter deold = new DesEncrypter(curPass);
 
                     passClass.updatePass(de.encrypt(deold.decrypt(passClass.getPass())));
 
@@ -229,21 +265,20 @@ public class DataPassClass {
 
         } else {
 
-            try {
-                password = new ConsolePassword();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
-            passHash = Hasher.encryptPassword(password);
+            ui.print("Data is not encrypted, please enter new password:");
+            byte[] newPass = ui.readPassword();
+
+            ps.setPassword(newPass);
+
+            passHash = ps.getPasshash();
             isEncrypted = true;
-
 
             for (PassClass passClass : dataDPC.values()) {
 
                 try {
 
-                    DesEncrypter de = new DesEncrypter(password);
+                    DesEncrypter de = new DesEncrypter(newPass);
                     passClass.updatePass(de.encrypt(passClass.getPass()));
 
                 } catch (Exception e) {
@@ -251,24 +286,12 @@ public class DataPassClass {
                 }
 
             }
-        }
-    }
 
-    /**
-     *
-     * @param password
-     * @return true if password is ok or not encrypted, else return false;
-     */
-    private boolean checkPassword(Password password){
-
-        if (!isEncrypted) return true;
-        if (Hasher.encryptPassword(password).equals(this.passHash)) {
-            return true;
-        } else {
-            System.out.println("Entered password is incorrect");
-            return false;
 
         }
     }
 
+    public byte[] getPassHash() {
+        return passHash;
+    }
 }
