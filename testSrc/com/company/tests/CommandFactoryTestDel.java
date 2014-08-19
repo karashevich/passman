@@ -14,7 +14,7 @@ public class CommandFactoryTestDel {
     public void testBuildCommand() throws Exception {
         CommandFactory cf1 = new CommandFactory();
 
-        String argstest[] = {"-del","link"};
+        String argstest[] = {"del","link"};
         if ((cf1.buildCommand(argstest).getType() != CommandType.DEL)) {
             fail("AddTest: CommandType is different");
         }

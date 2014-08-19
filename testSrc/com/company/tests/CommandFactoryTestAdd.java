@@ -14,7 +14,7 @@ public class CommandFactoryTestAdd {
     public void testAddCommand() throws Exception {
         CommandFactory cf1 = new CommandFactory();
 
-        String argstest[] = {"-add","link","user","pass"};
+        String argstest[] = {"add","link","user","pass"};
         if ((cf1.buildCommand(argstest).getType() != CommandType.ADD)) {
             fail("AddTest: CommandType is different");
         }

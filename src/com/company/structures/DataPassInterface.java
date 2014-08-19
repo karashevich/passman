@@ -17,7 +17,7 @@ public interface DataPassInterface {
     @Nullable
     PassClass getPC(String s, @Nullable PasswordStorage ps, UI ui);
 
-    void delPC(String s);
+    void delPC(String s) throws NoSuchPassClassException;
 
     int size();
 

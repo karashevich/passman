@@ -3,7 +3,6 @@ package com.company.structures;
 import com.company.UI;
 import com.company.preferences.Preferences;
 import com.company.security.*;
-import com.sun.tools.doclets.internal.toolkit.util.SourceToHTMLConverter;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.mapper.CannotResolveClassException;
@@ -133,8 +132,14 @@ public class DataPassClass implements DataPassInterface {
     }
 
 
+    /**
+     *
+     * @param s - Searching link
+     * return Null in case of absent of entry with "s" key.
+     */
     @Override
-    public void delPC(String s){
+    public void delPC(String s) throws NoSuchPassClassException {
+        if (!dataDPC.containsKey(s)) throw new NoSuchPassClassException(s);
         dataDPC.remove(s);
     }
 

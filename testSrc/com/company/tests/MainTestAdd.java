@@ -35,8 +35,8 @@ public class MainTestAdd {
     @Test
     public void testMain() throws Exception {
 
-        String argumentsAdd[] = {"-add", "link1", "user1", "pass1"};
-        String argumentsShow[] = {"-show", "link1"};
+        String argumentsAdd[] = {"add", "link1", "user1", "pass1"};
+        String argumentsShow[] = {"show", "link1"};
 
         Main.main(argumentsAdd);
 
