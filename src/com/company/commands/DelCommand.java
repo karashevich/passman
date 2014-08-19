@@ -3,7 +3,7 @@ package com.company.commands;
 import com.company.Command;
 import com.company.UI;
 import com.company.security.PasswordStorage;
-import com.company.structures.DataPassClass;
+import com.company.structures.DataPassInterface;
 
 /**
  * Created by jetbrains on 3/18/14.
@@ -17,7 +17,7 @@ public class DelCommand extends Command {
     }
 
     @Override
-    public void execute(DataPassClass dpc, String[] args, PasswordStorage ps, UI ui) {
+    public void execute(DataPassInterface dpc, String[] args, PasswordStorage ps, UI ui) {
 
         if (args.length < 2) {
             System.out.println("Oh, poor! You should write more arguments!");

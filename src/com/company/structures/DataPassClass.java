@@ -1,10 +1,12 @@
 package com.company.structures;
 
 import com.company.UI;
+import com.company.preferences.Preferences;
 import com.company.security.*;
 import com.sun.tools.doclets.internal.toolkit.util.SourceToHTMLConverter;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
+import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
@@ -12,31 +14,57 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.TreeMap;
 
 /**
  * Created by jetbrains on 1/31/14.
  * @author Sergey.Karashevich
  */
-public class DataPassClass {
+public class DataPassClass implements DataPassInterface {
 
 
-    private TreeMap<String, PassClass> dataDPC; // dataDPC - main data holder based on tree map. key = link, value = PassClass
+    private HashMap<String, PassClass> dataDPC; // dataDPC - main data holder based on tree map. key = link, value = PassClass
     private byte[] passHash = null;
     private boolean isEncrypted = false;
+    private String pathfile = Preferences.getDataPath();
 
+    @Override
     public boolean isEncrypted() {
         return isEncrypted;
     }
 
+//    public DataPassClass() {
+//
+//        this.dataDPC = new HashMap<String, PassClass>();
+//    }
+
     public DataPassClass() {
-        this.dataDPC = new TreeMap<String, PassClass>();
+
+        try {
+
+            this.dataDPC = loadFromFile().dataDPC;
+            this.isEncrypted = loadFromFile().isEncrypted();
+            this.passHash = loadFromFile().passHash;
+
+
+        } catch (IOException e) {
+
+            this.dataDPC = new HashMap<String, PassClass>();
+
+        } catch (CannotResolveClassException crce) {
+
+            this.dataDPC = new HashMap<String, PassClass>();
+        }
     }
+
+
 
     /**
      *
      * @param pc - element to add to main data holder
      */
+    @Override
     public void addPC(PassClass pc, PasswordStorage ps, UI ui){
 
         if (!isEncrypted()) {
@@ -66,11 +94,13 @@ public class DataPassClass {
      * @return PassClass with respective link or null if there no PassClasses with such link
      */
 
+    @Override
     public PassClass getPC(String s){
         return dataDPC.get(s);
     }
 
 
+    @Override
     public @Nullable PassClass getPC(String s, @Nullable PasswordStorage ps, UI ui){
 
         if (!dataDPC.containsKey(s)) {
@@ -103,22 +133,22 @@ public class DataPassClass {
     }
 
 
+    @Override
     public void delPC(String s){
         dataDPC.remove(s);
     }
 
     /**
      *
-     * @param pathFile - relative or absolute path for saving data
      * @throws IOException
      */
-    public void saveToFile(String pathFile) throws IOException{
+    public void saveToFile() throws IOException{
 
         XStream xstream = new XStream(new StaxDriver());
         String xml = xstream.toXML(this);
 
         //Saving XML to a new file
-        FileWriter fw = new FileWriter(pathFile);
+        FileWriter fw = new FileWriter(pathfile);
         try{
             fw.write(xml);
 
@@ -126,7 +156,7 @@ public class DataPassClass {
 
         } catch (IOException e) {
 
-            System.out.println("DataPassClass.saveToFile: IOException by saving file to " + pathFile);
+            System.out.println("DataPassClass.saveToFile: IOException by saving file to " + pathfile);
             throw e;
 
         } finally {
@@ -137,14 +167,13 @@ public class DataPassClass {
     /**
      *
      *
-     * @param pathFile
      * @throws IOException
      */
-    public static DataPassClass loadFromFile(String pathFile) throws IOException{
+    private DataPassClass loadFromFile() throws IOException{
 
         XStream xstream = new XStream(new StaxDriver());
 
-        BufferedReader br = new BufferedReader(new FileReader(pathFile));
+        BufferedReader br = new BufferedReader(new FileReader(pathfile));
         String everything;
 
         try {
@@ -173,6 +202,7 @@ public class DataPassClass {
 
     }
 
+    @Override
     public int size(){
         return dataDPC.size();
     }
@@ -227,6 +257,7 @@ public class DataPassClass {
         return true;
     }
 
+    @Override
     public void setPassword(PasswordStorage ps, UI ui){
 
 
@@ -236,7 +267,7 @@ public class DataPassClass {
             Password curPass = new Password(ui.readPassword());
 
 
-            while(ps.checkPassword(curPass)) {
+            while(!ps.checkPassword(curPass)) {
                 System.out.println("Entered password is incorrect, please try again!");
                 curPass = new Password(ui.readPassword());
             }
@@ -291,6 +322,7 @@ public class DataPassClass {
         }
     }
 
+    @Override
     public byte[] getPassHash() {
         return passHash;
     }

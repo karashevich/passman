@@ -3,6 +3,7 @@ package com.company.tests;
 import com.company.console.CUI;
 import com.company.security.PasswordStorage;
 import com.company.structures.DataPassClass;
+import com.company.structures.DataPassInterface;
 import com.company.structures.PassClass;
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ public class DataPassClassTest {
     @Test
     public void testAddPC() throws Exception {
         PassClass pc = new PassClass("link1", "login1", "pass1");
-        DataPassClass dpcTest = new DataPassClass();
+        DataPassInterface dpcTest = new DataPassClass();
         PasswordStorage ps = null;
         CUI cui = null;
 
@@ -37,7 +38,7 @@ public class DataPassClassTest {
     @Test
     public void testDelPc() throws Exception {
         PassClass pc = new PassClass("link1", "login1", "pass1");
-        DataPassClass dpcTest = new DataPassClass();
+        DataPassInterface dpcTest = new DataPassClass();
         PasswordStorage ps = null;
         CUI cui = null;
 
@@ -58,7 +59,7 @@ public class DataPassClassTest {
     public void testGetPc() throws Exception {
 
         PassClass pc = new PassClass("link1", "login1", "pass1");
-        DataPassClass dpcTest = new DataPassClass();
+        DataPassInterface dpcTest = new DataPassClass();
         PasswordStorage ps = null;
         CUI cui = null;
 
@@ -84,7 +85,7 @@ public class DataPassClassTest {
 
         try {
             dpcTest.addPC(pc, ps, cui);
-            dpcTest.saveToFile("data/testData.xml");
+            dpcTest.saveToFile();
         } catch (IOException e) {
             fail("Method saveToFile has raised exception.");
             e.printStackTrace();
@@ -92,24 +93,4 @@ public class DataPassClassTest {
 
     }
 
-    @Test
-    public void testLoadFromFile() throws Exception {
-
-        PassClass pc = new PassClass("link1", "login1", "pass1");
-        DataPassClass dpcTest = new DataPassClass();
-        DataPassClass expected = dpcTest;
-
-        String path = "data/testData2.xml";
-
-        dpcTest.saveToFile(path);
-
-        try {
-            expected = DataPassClass.loadFromFile(path);
-            assertSame(dpcTest, expected);
-        } catch (IOException e) {
-            fail("Method loadFromFile has raised exception.");
-            e.printStackTrace();
-        }
-
-    }
 }

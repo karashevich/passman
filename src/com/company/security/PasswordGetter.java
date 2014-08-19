@@ -15,14 +15,12 @@ public class PasswordGetter {
         Password password = ps.getPassword();
         while (password == null) {
 
-            System.err.println("TIME IS EXPIRED.");
-
             Password pass = new Password(ui.readPassword());
             ps.setPassword(pass);
 
             if (!Arrays.equals(ps.getPasshash(), hashPass)){
                 ui.print("Incorrect password, try again! ");
-                pass =null;
+                pass = null;
             }
             password = pass;
 
@@ -31,4 +29,5 @@ public class PasswordGetter {
         return password;
 
     }
+
 }

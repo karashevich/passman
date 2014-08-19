@@ -89,41 +89,25 @@ public class CUI implements UI{
         //Loading DataPassClass
         DataPassClass dpc;
         System.out.print("Trying to remember everything...  ");
-        try {
 
-            dpc = DataPassClass.loadFromFile(Preferences.getDataPath());
-            System.out.println("Ok!");
+        dpc = new DataPassClass();
+        System.out.println("Ok!");
 
 
-            if (dpc.isEncrypted()) {
-                try {
-                    System.out.println("My mind is encrypted, please remember your password:");
-                    ps = new PasswordStorage(new Password(readPassword()));
+        if (dpc.isEncrypted()) {
+            try {
+                System.out.println("My mind is encrypted, please remember your password:");
+                ps = new PasswordStorage(new Password(readPassword()));
 
-                    while(!Arrays.equals(dpc.getPassHash(), ps.getPasshash())){
-                        print("Incorrect password, try again. ");
-                        ps.setPassword(readPassword());
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
+                while(!Arrays.equals(dpc.getPassHash(), ps.getPasshash())){
+                    print("Incorrect password, try again. ");
+                    ps.setPassword(readPassword());
                 }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            // Cannot read from file or not such file
-        } catch (IOException e) {
-
-            System.out.println("Attention! File 'data.xml' didn't find, passman will start without passwords history!");
-            dpc = new DataPassClass();
-
-        //Cannot resolve class from file
-        } catch (CannotResolveClassException crce) {
-
-            System.out.println("Attention! File 'data.xml' has wrong format, passman will start without passwords history!");
-            dpc = new DataPassClass();
-
         }
-
 
         //Initialize BufferedReader to read from console.
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -148,7 +132,7 @@ public class CUI implements UI{
 
                         try {
 
-                            dpc.saveToFile(Preferences.getDataPath());
+                            dpc.saveToFile();
 
                         } catch (IOException e) {
 
@@ -158,7 +142,7 @@ public class CUI implements UI{
                             File f = new File(Preferences.getDataPath());
                             f.createNewFile();
 
-                            dpc.saveToFile(Preferences.getDataPath());
+                            dpc.saveToFile();
                         }
 
                     } else if (commandLine.isEmpty()) {

@@ -11,7 +11,8 @@ import org.jetbrains.annotations.Nullable;
 public class CommandFactory {
     public Command buildCommand(String args[]){
 
-        String s = args[0].substring(1);
+        //String s = args[0].substring(1);
+        String s = args[0];
 
         //detecting type of command. In bad case it is "null"
         @Nullable CommandType cmdtype = null;

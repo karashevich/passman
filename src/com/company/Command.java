@@ -2,7 +2,7 @@ package com.company;
 
 import com.company.commands.CommandType;
 import com.company.security.PasswordStorage;
-import com.company.structures.DataPassClass;
+import com.company.structures.DataPassInterface;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -24,7 +24,7 @@ public abstract class Command {
     }
 
 
-    public abstract void execute(DataPassClass dpc, String args[], PasswordStorage ps, UI ui);
+    public abstract void execute(DataPassInterface dpc, String args[], PasswordStorage ps, UI ui);
 
     public CommandType getType(){
         return cmdtype;
