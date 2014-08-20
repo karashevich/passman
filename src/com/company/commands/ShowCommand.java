@@ -4,7 +4,7 @@ import com.company.Command;
 import com.company.UI;
 import com.company.security.PasswordStorage;
 import com.company.structures.DataPassInterface;
-import com.company.structures.PassClass;
+import com.company.structures.Item;
 
 /**
  * Created by jetbrains on 3/18/14.
@@ -28,7 +28,7 @@ public class ShowCommand extends Command {
         StringBuilder sb = new StringBuilder();
         String link = args[1];
 
-        PassClass pc = dpc.getPC(link, ps, ui);
+        Item pc = dpc.getPC(link, ps, ui);
         if (pc == null){
             System.out.println("Unfortunately I cannot remember such resources.");
             return;

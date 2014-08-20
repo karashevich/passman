@@ -7,7 +7,7 @@ public class NoSuchPassClassException extends Exception {
 
     String PassClassKey;
 
-    NoSuchPassClassException(PassClass pc){
+    NoSuchPassClassException(Item pc){
         this.PassClassKey = pc.getLink();
     }
 

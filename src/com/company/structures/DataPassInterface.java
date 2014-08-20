@@ -10,12 +10,12 @@ import org.jetbrains.annotations.Nullable;
 public interface DataPassInterface {
     boolean isEncrypted();
 
-    void addPC(PassClass pc, @Nullable PasswordStorage ps, UI ui);
+    void addPC(Item pc, @Nullable PasswordStorage ps, UI ui);
 
-    PassClass getPC(String s);
+    Item getPC(String s);
 
     @Nullable
-    PassClass getPC(String s, @Nullable PasswordStorage ps, UI ui);
+    Item getPC(String s, @Nullable PasswordStorage ps, UI ui);
 
     void delPC(String s) throws NoSuchPassClassException;
 

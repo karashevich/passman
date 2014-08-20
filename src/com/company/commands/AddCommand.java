@@ -4,7 +4,7 @@ import com.company.Command;
 import com.company.UI;
 import com.company.security.PasswordStorage;
 import com.company.structures.DataPassInterface;
-import com.company.structures.PassClass;
+import com.company.structures.Item;
 
 /**
  * Created by jetbrains on 3/18/14.
@@ -13,10 +13,10 @@ public class AddCommand extends Command {
 
     private static final String description = "-add        add a new record.    passman.jar -add <link> <login> <password>";
 
-    private static PassClass readPassClass(String s0, String s1, String s2) throws Exception{
+    private static Item readPassClass(String s0, String s1, String s2) throws Exception{
 
-        PassClass newPass;
-        newPass = new PassClass(s0, s1, s2);
+        Item newPass;
+        newPass = new Item(s0, s1, s2);
 
         return newPass;
     }
@@ -28,7 +28,7 @@ public class AddCommand extends Command {
     @Override
     public void execute(DataPassInterface dpc, String[] args, PasswordStorage ps, UI ui) {
 
-        PassClass newPass;
+        Item newPass;
 
         try {
 

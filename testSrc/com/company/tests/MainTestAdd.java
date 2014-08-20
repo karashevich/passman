@@ -41,7 +41,7 @@ public class MainTestAdd {
         Main.main(argumentsAdd);
 
         Main.main(argumentsShow);
-        assertEquals("PassClass{link='link1', login='user1', pass='pass1'}\n", outContent.toString());
+        assertEquals("Item{link='link1', login='user1', pass='pass1'}\n", outContent.toString());
 
     }
 

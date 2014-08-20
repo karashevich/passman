@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
  * To change this template use File | Settings | File Templates.
  *
  */
-public final class PassClass {
+public final class Item {
 
     private final String link;
 
@@ -26,7 +26,7 @@ public final class PassClass {
      * @param login - login for this link
      * @param pass - pass for this login for this link
      */
-    public PassClass(@NotNull String link, String login, @NotNull String pass) {
+    public Item(@NotNull String link, String login, @NotNull String pass) {
         this.link = link;
         this.login = login;
         this.pass = pass;
@@ -53,7 +53,7 @@ public final class PassClass {
 
     @Override
     public String toString() {
-        return "PassClass{" +
+        return "Item{" +
                 "link='" + link + '\'' +
                 ", login='" + login + '\'' +
                 ", pass='" + pass + '\'' +
@@ -65,11 +65,11 @@ public final class PassClass {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        PassClass passClass = (PassClass) o;
+        Item item = (Item) o;
 
-        if (link != null ? !link.equals(passClass.link) : passClass.link != null) return false;
-        if (!login.equals(passClass.login)) return false;
-        if (!pass.equals(passClass.pass)) return false;
+        if (link != null ? !link.equals(item.link) : item.link != null) return false;
+        if (!login.equals(item.login)) return false;
+        if (!pass.equals(item.pass)) return false;
 
         return true;
     }

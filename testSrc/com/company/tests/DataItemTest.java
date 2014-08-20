@@ -4,7 +4,7 @@ import com.company.console.CUI;
 import com.company.security.PasswordStorage;
 import com.company.structures.DataPassClass;
 import com.company.structures.DataPassInterface;
-import com.company.structures.PassClass;
+import com.company.structures.Item;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -15,10 +15,10 @@ import static org.junit.Assert.fail;
 /**
  * Created by jetbrains on 3/18/14.
  */
-public class DataPassClassTest {
+public class DataItemTest {
     @Test
     public void testAddPC() throws Exception {
-        PassClass pc = new PassClass("link1", "login1", "pass1");
+        Item pc = new Item("link1", "login1", "pass1");
         DataPassInterface dpcTest = new DataPassClass();
         PasswordStorage ps = null;
         CUI cui = null;
@@ -37,7 +37,7 @@ public class DataPassClassTest {
 
     @Test
     public void testDelPc() throws Exception {
-        PassClass pc = new PassClass("link1", "login1", "pass1");
+        Item pc = new Item("link1", "login1", "pass1");
         DataPassInterface dpcTest = new DataPassClass();
         PasswordStorage ps = null;
         CUI cui = null;
@@ -58,14 +58,14 @@ public class DataPassClassTest {
     @Test
     public void testGetPc() throws Exception {
 
-        PassClass pc = new PassClass("link1", "login1", "pass1");
+        Item pc = new Item("link1", "login1", "pass1");
         DataPassInterface dpcTest = new DataPassClass();
         PasswordStorage ps = null;
         CUI cui = null;
 
         dpcTest.addPC(pc, ps, cui);
         try {
-            PassClass result = dpcTest.getPC("link1");
+            Item result = dpcTest.getPC("link1");
             assertSame(result, pc);
 
         } catch (Exception e) {
@@ -77,7 +77,7 @@ public class DataPassClassTest {
     @Test
     public void testSaveToFile() throws Exception {
 
-        PassClass pc = new PassClass("link1", "login1", "pass1");
+        Item pc = new Item("link1", "login1", "pass1");
         DataPassClass dpcTest = new DataPassClass();
         PasswordStorage ps = null;
         CUI cui = null;

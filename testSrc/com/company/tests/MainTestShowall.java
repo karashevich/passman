@@ -43,7 +43,7 @@ public class MainTestShowall {
 
         Main.main(argumentsShowall);
 
-        String expected = "DataPassClass{dataDPC={link1=PassClass{link='link1', login='user1', pass='pass1'}, link2=PassClass{link='link2', login='user2', pass='pass2'}}}\n";
+        String expected = "DataPassClass{dataDPC={link1=Item{link='link1', login='user1', pass='pass1'}, link2=Item{link='link2', login='user2', pass='pass2'}}}\n";
         assertEquals(expected, outContent.toString());
 
     }

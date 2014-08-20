@@ -12,9 +12,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.TreeMap;
 
 /**
  * Created by jetbrains on 1/31/14.
@@ -23,7 +21,7 @@ import java.util.TreeMap;
 public class DataPassClass implements DataPassInterface {
 
 
-    private HashMap<String, PassClass> dataDPC; // dataDPC - main data holder based on tree map. key = link, value = PassClass
+    private HashMap<String, Item> dataDPC; // dataDPC - main data holder based on tree map. key = link, value = Item
     private byte[] passHash = null;
     private boolean isEncrypted = false;
     private String pathfile = Preferences.getDataPath();
@@ -35,7 +33,7 @@ public class DataPassClass implements DataPassInterface {
 
 //    public DataPassClass() {
 //
-//        this.dataDPC = new HashMap<String, PassClass>();
+//        this.dataDPC = new HashMap<String, Item>();
 //    }
 
     public DataPassClass() {
@@ -49,11 +47,11 @@ public class DataPassClass implements DataPassInterface {
 
         } catch (IOException e) {
 
-            this.dataDPC = new HashMap<String, PassClass>();
+            this.dataDPC = new HashMap<String, Item>();
 
         } catch (CannotResolveClassException crce) {
 
-            this.dataDPC = new HashMap<String, PassClass>();
+            this.dataDPC = new HashMap<String, Item>();
         }
     }
 
@@ -64,7 +62,7 @@ public class DataPassClass implements DataPassInterface {
      * @param pc - element to add to main data holder
      */
     @Override
-    public void addPC(PassClass pc, PasswordStorage ps, UI ui){
+    public void addPC(Item pc, PasswordStorage ps, UI ui){
 
         if (!isEncrypted()) {
             dataDPC.put(pc.getLink(), pc);
@@ -76,7 +74,7 @@ public class DataPassClass implements DataPassInterface {
             try {
 
                 des = new DesEncrypter(PasswordGetter.getPassword(ui, ps, passHash));
-                PassClass encryptedpc = new PassClass(pc.getLink(), pc.getLogin(),  des.encrypt(pc.getPass()));
+                Item encryptedpc = new Item(pc.getLink(), pc.getLogin(),  des.encrypt(pc.getPass()));
                 dataDPC.put(encryptedpc.getLink(), encryptedpc);
 
             } catch (Exception e) {
@@ -90,17 +88,18 @@ public class DataPassClass implements DataPassInterface {
     /**
      *
      * @param s - searched link
-     * @return PassClass with respective link or null if there no PassClasses with such link
+     * @return Item with respective link or null if there no PassClasses with such link
      */
 
     @Override
-    public PassClass getPC(String s){
+    public Item getPC(String s){
         return dataDPC.get(s);
     }
 
 
     @Override
-    public @Nullable PassClass getPC(String s, @Nullable PasswordStorage ps, UI ui){
+    public @Nullable
+    Item getPC(String s, @Nullable PasswordStorage ps, UI ui){
 
         if (!dataDPC.containsKey(s)) {
             return null;
@@ -113,7 +112,7 @@ public class DataPassClass implements DataPassInterface {
                 if (pass == null) System.err.println("ACHTUNG!!!");
 
                 DesEncrypter des = new DesEncrypter(pass);
-                PassClass pc = new PassClass(dataDPC.get(s).getLink(), dataDPC.get(s).getLogin(),  des.decrypt(dataDPC.get(s).getPass()));
+                Item pc = new Item(dataDPC.get(s).getLink(), dataDPC.get(s).getLogin(),  des.decrypt(dataDPC.get(s).getPass()));
 
                 return pc;
 
@@ -216,7 +215,7 @@ public class DataPassClass implements DataPassInterface {
 //    public String toString() {
 //        StringBuilder sbd = new StringBuilder();
 //
-//        for(PassClass pc: dataDPC.values()){
+//        for(Item pc: dataDPC.values()){
 //            sbd.append(pc.toString());
 //            sbd.append(";");
 //        }
@@ -230,12 +229,12 @@ public class DataPassClass implements DataPassInterface {
 
         StringBuilder sb = new StringBuilder();
 
-        for (PassClass passClass : dataDPC.values()) {
-            sb.append("  Link: \"").append(passClass.getLink()).append("\" Login: \"").append(passClass.getLogin());
+        for (Item item : dataDPC.values()) {
+            sb.append("  Link: \"").append(item.getLink()).append("\" Login: \"").append(item.getLogin());
             if (isEncrypted) {
                 sb.append("\" Password: ******");
             } else {
-                sb.append("\" Password: \"").append(passClass.getPass()).append("\"");
+                sb.append("\" Password: \"").append(item.getPass()).append("\"");
             }
             sb.append("\n");
         }
@@ -283,14 +282,14 @@ public class DataPassClass implements DataPassInterface {
             passHash = Hasher.encryptPassword(newPass);
             ps.setPassword(newPass);
 
-            for (PassClass passClass : dataDPC.values()) {
+            for (Item item : dataDPC.values()) {
 
                 try {
 
                     DesEncrypter de = new DesEncrypter(newPass);
                     DesEncrypter deold = new DesEncrypter(curPass);
 
-                    passClass.updatePass(de.encrypt(deold.decrypt(passClass.getPass())));
+                    item.updatePass(de.encrypt(deold.decrypt(item.getPass())));
 
 
                 } catch (Exception e) {
@@ -310,12 +309,12 @@ public class DataPassClass implements DataPassInterface {
             passHash = ps.getPasshash();
             isEncrypted = true;
 
-            for (PassClass passClass : dataDPC.values()) {
+            for (Item item : dataDPC.values()) {
 
                 try {
 
                     DesEncrypter de = new DesEncrypter(newPass);
-                    passClass.updatePass(de.encrypt(passClass.getPass()));
+                    item.updatePass(de.encrypt(item.getPass()));
 
                 } catch (Exception e) {
                     e.printStackTrace();
