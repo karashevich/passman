@@ -2,8 +2,8 @@ package com.company.tests;
 
 import com.company.console.CUI;
 import com.company.security.PasswordStorage;
-import com.company.structures.DataPassClass;
-import com.company.structures.DataPassInterface;
+import com.company.structures.Database;
+import com.company.structures.DatabaseImpl;
 import com.company.structures.Item;
 import org.junit.Test;
 
@@ -19,7 +19,7 @@ public class DataItemTest {
     @Test
     public void testAddPC() throws Exception {
         Item pc = new Item("link1", "login1", "pass1");
-        DataPassInterface dpcTest = new DataPassClass();
+        Database dpcTest = new DatabaseImpl();
         PasswordStorage ps = null;
         CUI cui = null;
 
@@ -38,7 +38,7 @@ public class DataItemTest {
     @Test
     public void testDelPc() throws Exception {
         Item pc = new Item("link1", "login1", "pass1");
-        DataPassInterface dpcTest = new DataPassClass();
+        Database dpcTest = new DatabaseImpl();
         PasswordStorage ps = null;
         CUI cui = null;
 
@@ -59,7 +59,7 @@ public class DataItemTest {
     public void testGetPc() throws Exception {
 
         Item pc = new Item("link1", "login1", "pass1");
-        DataPassInterface dpcTest = new DataPassClass();
+        Database dpcTest = new DatabaseImpl();
         PasswordStorage ps = null;
         CUI cui = null;
 
@@ -78,7 +78,7 @@ public class DataItemTest {
     public void testSaveToFile() throws Exception {
 
         Item pc = new Item("link1", "login1", "pass1");
-        DataPassClass dpcTest = new DataPassClass();
+        DatabaseImpl dpcTest = new DatabaseImpl();
         PasswordStorage ps = null;
         CUI cui = null;
 

@@ -1,6 +1,7 @@
 package com.company.security;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -25,7 +26,7 @@ public class DesEncrypter {
         dcipher.init(Cipher.DECRYPT_MODE, desKey);
     }
 
-    public DesEncrypter(@NotNull Password password) throws Exception {
+    public DesEncrypter(@Nullable Password password) throws Exception {
 
         DESKeySpec dks = new DESKeySpec(password.getPassword());
         SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");
@@ -72,8 +73,8 @@ public class DesEncrypter {
 
     public static void main(String[] argv) throws Exception {
 
-        String password1 = "123456784356";
-        String password2 = "1234567945634";
+        String password1 = "12345678";
+        String password2 = "56782134";
 
         DESKeySpec dks = new DESKeySpec(password1.getBytes());
         SecretKeyFactory skf = SecretKeyFactory.getInstance("DES");

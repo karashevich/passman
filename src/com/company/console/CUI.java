@@ -5,12 +5,10 @@ import com.company.UI;
 import com.company.preferences.Mode;
 import com.company.preferences.Preferences;
 import com.company.security.*;
-import com.company.structures.DataPassClass;
-import com.thoughtworks.xstream.mapper.CannotResolveClassException;
+import com.company.structures.DatabaseImpl;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -86,11 +84,11 @@ public class CUI implements UI{
         System.out.println("Type '?' to ask Passman how to deal with him.");
         System.out.println("*******************");
 
-        //Loading DataPassClass
-        DataPassClass dpc;
+        //Loading DatabaseImpl
+        DatabaseImpl dpc;
         System.out.print("Trying to remember everything...  ");
 
-        dpc = new DataPassClass();
+        dpc = new DatabaseImpl();
         System.out.println("Ok!");
 
 

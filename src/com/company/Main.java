@@ -27,24 +27,24 @@ public class Main {
 
 //        Password password = new Password("password");
 //
-//        DataPassClass dpc;
+//        DatabaseImpl dpc;
 //
 //        // Try to find and load data file
 //        try{
 //
-//            dpc = DataPassClass.loadFromFile(dataPath);
+//            dpc = DatabaseImpl.loadFromFile(dataPath);
 //
 //        // Cannot read from file or not such file
 //        } catch (IOException e) {
 //
 //            System.out.println("Attention! File 'data.xml' didn't find, passman will start without passwords history!");
-//            dpc = new DataPassClass();
+//            dpc = new DatabaseImpl();
 //
 //        //Cannot resolve class from file
 //        } catch (CannotResolveClassException crce) {
 //
 //            System.out.println("Attention! File 'data.xml' has wrong format, passman will start without passwords history!");
-//            dpc = new DataPassClass();
+//            dpc = new DatabaseImpl();
 //
 //        }
 //

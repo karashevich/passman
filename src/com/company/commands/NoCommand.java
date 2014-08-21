@@ -3,7 +3,7 @@ package com.company.commands;
 import com.company.Command;
 import com.company.UI;
 import com.company.security.PasswordStorage;
-import com.company.structures.DataPassInterface;
+import com.company.structures.Database;
 
 /**
  * Created by jetbrains on 3/18/14.
@@ -18,7 +18,7 @@ public class NoCommand extends Command {
     }
 
     @Override
-    public void execute(DataPassInterface dpc, String[] args, PasswordStorage ps, UI ui) {
+    public void execute(Database dpc, String[] args, PasswordStorage ps, UI ui) {
         System.out.println(getDescription());
     }
 }

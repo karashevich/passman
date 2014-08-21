@@ -32,6 +32,26 @@ public class Hasher {
         return sha1;
     }
 
+    public static byte[] encryptPassword(Password password) {
+
+        byte[] sha1 = null;
+        try
+        {
+            MessageDigest crypt = MessageDigest.getInstance("SHA-1");
+            crypt.reset();
+            crypt.update(password.getPassword());
+            sha1 = crypt.digest();
+        }
+        catch(NoSuchAlgorithmException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return sha1;
+    }
+
 //    protected static String byteToHex(final byte[] hash)
 //    {
 //        Formatter formatter = new Formatter();
