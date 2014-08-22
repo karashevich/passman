@@ -127,7 +127,7 @@ public class DatabaseControl {
         if (isEncrypted()){
             if (passwordIsRight(password)) {
 
-                return Encrypter.encryptItem(database.getItem(link), password);
+                return Encrypter.decryptItem(database.getItem(link), password);
 
             } else {
 
@@ -150,13 +150,13 @@ public class DatabaseControl {
      */
     public void setPassword(@Nullable Password oldPassword, Password newPassword) throws InvalidPasswordException{
 
-        if (isEncrypted()) if (passwordIsRight(oldPassword)) {
-            for (Item item : database)
-                item.updatePass(Encrypter.encrypt(Encrypter.decrypt(item.getPass(), oldPassword), newPassword));
-            database.setPassHash(Hasher.encryptPassword(newPassword));
+        if (isEncrypted()) {
+            if (passwordIsRight(oldPassword)) {
+                for (Item item : database)
+                    item.updatePass(Encrypter.encrypt(Encrypter.decrypt(item.getPass(), oldPassword), newPassword));
+                database.setPassHash(Hasher.encryptPassword(newPassword));
+            } else throw new InvalidPasswordException("Old password is invalid!");
         }
-
-        else throw new InvalidPasswordException("Old password is invalid!");
         else {
 
             for (Item item : database) item.updatePass(Encrypter.encrypt(item.getPass(), newPassword));
@@ -173,6 +173,15 @@ public class DatabaseControl {
      * @param password - master password
      */
     public void delItem(String link, Password password) throws NoSuchItemException, InvalidPasswordException{
+
+        if (database.isEncrypted()) {
+
+            if (passwordIsRight(password)) database.delItem(link);
+            else throw new InvalidPasswordException("Invalid password!");
+
+        } else {
+            database.delItem(link);
+        }
 
     }
 

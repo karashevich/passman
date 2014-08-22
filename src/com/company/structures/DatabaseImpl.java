@@ -47,7 +47,8 @@ public class DatabaseImpl implements Database {
     @Override
     public void addItem(Item item){
 
-        data.put(item.getLink(), item);
+        Item newItem = new Item(item.getLink(), item.getLogin(), item.getPass());
+        data.put(newItem.getLink(), newItem);
 
     }
 
