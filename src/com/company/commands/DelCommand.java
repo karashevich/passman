@@ -26,7 +26,7 @@ public class DelCommand extends Command {
         }
 
         try {
-            dpc.delPC(args[1]);
+            dpc.delItem(args[1]);
         } catch (NoSuchItemException e) {
             ui.print("No such entry with \"" + e.getItemKey() + "\" link!\n");
         }

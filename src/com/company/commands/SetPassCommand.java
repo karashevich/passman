@@ -21,8 +21,8 @@ public class SetPassCommand extends Command {
     public void execute(Database dpc, String[] args, PasswordStorage ps, UI ui) {
 
         try {
-            dpc.setPassword(ps, ui);
-        } catch (Exception e) {
+
+            } catch (Exception e) {
             e.printStackTrace();
         }
 

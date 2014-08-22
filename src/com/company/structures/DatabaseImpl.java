@@ -52,7 +52,8 @@ public class DatabaseImpl implements Database {
     }
 
     @Override
-    public Item getItem(String s){
+    public Item getItem(String s) throws NoSuchItemException{
+        if (!data.containsKey(s)) throw new NoSuchItemException(s);
         return data.get(s);
     }
 

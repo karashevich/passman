@@ -11,7 +11,7 @@ import com.company.structures.Item;
  */
 public class AddCommand extends Command {
 
-    private static final String description = "-add        add a new record.    passman.jar -add <link> <login> <password>";
+    private static final String description = "add        add a new record.    passman.jar -add <link> <login> <password>";
 
     private static Item readPassClass(String s0, String s1, String s2) throws Exception{
 
@@ -38,7 +38,7 @@ public class AddCommand extends Command {
             }
 
             newPass = readPassClass(args[1], args[2], args[3]);
-            dpc.addPC(newPass, ps, ui);
+            dpc.addItem(newPass);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -14,6 +14,7 @@ import javax.xml.bind.NotIdentifiableEvent;
 import java.io.*;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -23,6 +24,11 @@ public class DatabaseControl {
 
     private Database database;
 
+    public DatabaseControl() {
+
+        this.database = new DatabaseImpl();
+
+    }
 
     public DatabaseControl(Database database){
         this.database = database;
@@ -144,11 +150,10 @@ public class DatabaseControl {
      */
     public void setPassword(@Nullable Password oldPassword, Password newPassword) throws InvalidPasswordException{
 
-        if (isEncrypted()) if (passwordIsRight(oldPassword)) for (Item item : database) {
-
-            item.updatePass(Encrypter.encrypt(Encrypter.decrypt(item.getPass(), oldPassword), newPassword));
+        if (isEncrypted()) if (passwordIsRight(oldPassword)) {
+            for (Item item : database)
+                item.updatePass(Encrypter.encrypt(Encrypter.decrypt(item.getPass(), oldPassword), newPassword));
             database.setPassHash(Hasher.encryptPassword(newPassword));
-
         }
 
         else throw new InvalidPasswordException("Old password is invalid!");

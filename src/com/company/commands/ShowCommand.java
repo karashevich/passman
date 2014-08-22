@@ -4,6 +4,7 @@ import com.company.Command;
 import com.company.UI;
 import com.company.security.PasswordStorage;
 import com.company.structures.Database;
+import com.company.structures.Exceptions.NoSuchItemException;
 import com.company.structures.Item;
 
 /**
@@ -28,7 +29,13 @@ public class ShowCommand extends Command {
         StringBuilder sb = new StringBuilder();
         String link = args[1];
 
-        Item pc = dpc.getPC(link, ps, ui);
+        Item pc = null;
+
+        try {
+            pc = dpc.getItem(link);
+        } catch (NoSuchItemException e) {
+            e.printStackTrace();
+        }
         if (pc == null){
             System.out.println("Unfortunately I cannot remember such resources.");
             return;

@@ -130,9 +130,9 @@ public class CUI implements UI{
 
                         try {
 
-                            dpc.saveToFile();
+                            //dpc.saveToFile();
 
-                        } catch (IOException e) {
+                        } catch (Exception e) {
 
                             e.printStackTrace();
                             System.out.println("Attention! File data.xml' didn't find. Trying to create a new one.");
@@ -140,7 +140,7 @@ public class CUI implements UI{
                             File f = new File(Preferences.getDataPath());
                             f.createNewFile();
 
-                            dpc.saveToFile();
+                            //dpc.saveToFile();
                         }
 
                     } else if (commandLine.isEmpty()) {
