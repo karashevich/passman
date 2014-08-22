@@ -194,9 +194,8 @@ public class DatabaseControl {
 
         HashSet<Item> hashSet = new HashSet<Item>();
 
-        for(Item iterItem: database){
-            hashSet.add(new Item(iterItem.getLink(), iterItem.getLogin(), isEncrypted()?"*******":iterItem.getPass()));
-        }
+        for(Item iterItem: database)
+            hashSet.add(new Item(iterItem.getLink(), iterItem.getLogin(), isEncrypted() ? "*******" : iterItem.getPass()));
 
         return hashSet;
 

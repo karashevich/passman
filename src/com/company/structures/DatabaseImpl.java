@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -37,25 +38,30 @@ public class DatabaseImpl implements Database {
 //    }
 
     public DatabaseImpl() {
-
         this.data = new HashMap<String, Item>();
-
     }
 
 
 
     @Override
     public void addItem(Item item){
-
-        Item newItem = new Item(item.getLink(), item.getLogin(), item.getPass());
-        data.put(newItem.getLink(), newItem);
-
+        data.put(item.getLink(), copyItem(item));
     }
 
     @Override
     public Item getItem(String s) throws NoSuchItemException{
         if (!data.containsKey(s)) throw new NoSuchItemException(s);
-        return data.get(s);
+        return copyItem(data.get(s));
+    }
+
+    @Override
+    public HashSet<Item> getItems() {
+
+        HashSet<Item> hashSet = new HashSet<Item>();
+        for(Item item: data.values()) hashSet.add(copyItem(item));
+
+        return hashSet;
+
     }
 
     @Override
@@ -63,10 +69,6 @@ public class DatabaseImpl implements Database {
         if (!data.containsKey(s)) throw new NoSuchItemException(s);
         data.remove(s);
     }
-
-
-
-
 
     @Override
     public int size(){
@@ -141,4 +143,9 @@ public class DatabaseImpl implements Database {
     public Iterator<Item> iterator() {
         return data.values().iterator();
     }
+
+    private Item copyItem(Item item){
+        return new Item(item.getLink(), item.getLogin(), item.getPass());
+    }
+
 }

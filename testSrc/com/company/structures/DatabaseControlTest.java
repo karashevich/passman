@@ -101,7 +101,7 @@ public class DatabaseControlTest {
     }
 
     @Test
-    public void testGetItems() throws Exception {
+    public void testGetItem2() throws Exception {
 
         String link = "link";
         final Item item = new Item(link, "login", "pass");
@@ -130,6 +130,30 @@ public class DatabaseControlTest {
 
         assertEquals(databaseControl.getItem(link, newPassword), item);
     }
+
+    @Test
+    public void testGetItems() throws Exception {
+
+        Item item1 = new Item("link1", "user1", "pass1");
+        Item item2 = new Item("link2", "user2", "pass2");
+
+        databaseControl.addItem(item1, password);
+        databaseControl.addItem(item2, password);
+
+//        for (Item item: databaseControl.getItems()){
+//            databaseControl.delItem(item.getLink(), password);
+//        }
+
+        databaseControl.getItems().remove(item1);
+        databaseControl.getItems().remove(item2);
+
+        assertEquals(2, databaseControl.getItems().size());
+
+        for (Item item : databaseControl.getItems()) databaseControl.delItem(item.getLink(), password);
+
+        assertEquals(0, databaseControl.getItems().size());
+    }
+
 
     @Test
     public void testIsEncrypted() throws Exception {

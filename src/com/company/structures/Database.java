@@ -7,6 +7,8 @@ import com.company.structures.Exceptions.InvalidPasswordException;
 import com.company.structures.Exceptions.NoSuchItemException;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
+
 /**
  * Created by jetbrains on 8/18/14.
  */
@@ -17,6 +19,8 @@ public interface Database extends Iterable<Item>{
     void addItem(Item item);
 
     Item getItem(String s) throws NoSuchItemException;
+
+    HashSet<Item> getItems();
 
     void delItem(String s) throws NoSuchItemException;
 
