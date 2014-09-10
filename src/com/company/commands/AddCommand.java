@@ -2,8 +2,9 @@ package com.company.commands;
 
 import com.company.Command;
 import com.company.UI;
-import com.company.security.PasswordStorage;
-import com.company.structures.Database;
+import com.company.security.PasswordHolder;
+import com.company.structures.DatabaseControl;
+import com.company.structures.Exceptions.InvalidPasswordException;
 import com.company.structures.Item;
 
 /**
@@ -13,7 +14,7 @@ public class AddCommand extends Command {
 
     private static final String description = "add        add a new record.    passman.jar -add <link> <login> <password>";
 
-    private static Item readPassClass(String s0, String s1, String s2) throws Exception{
+    private static Item readItem(String s0, String s1, String s2) {
 
         Item newPass;
         newPass = new Item(s0, s1, s2);
@@ -26,22 +27,13 @@ public class AddCommand extends Command {
     }
 
     @Override
-    public void execute(Database dpc, String[] args, PasswordStorage ps, UI ui) {
+    public void execute(DatabaseControl databaseControl, String[] args, PasswordHolder passwordHolder) throws CommandException, InvalidPasswordException{
 
-        Item newPass;
-
-        try {
-
-            if (args.length < 4) {
-                System.out.println("Oh, poor! You should write more arguments!");
-                return;
-            }
-
-            newPass = readPassClass(args[1], args[2], args[3]);
-            dpc.addItem(newPass);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (args.length < 4) {
+            throw new CommandException(CommandType.ADD, "Not enough arguments.");
         }
+
+        databaseControl.addItem(readItem(args[1], args[2], args[3]), passwordHolder.getPassword());
 
     }
 }

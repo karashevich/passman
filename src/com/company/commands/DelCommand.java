@@ -2,8 +2,10 @@ package com.company.commands;
 
 import com.company.Command;
 import com.company.UI;
-import com.company.security.PasswordStorage;
+import com.company.security.PasswordHolder;
 import com.company.structures.Database;
+import com.company.structures.DatabaseControl;
+import com.company.structures.Exceptions.InvalidPasswordException;
 import com.company.structures.Exceptions.NoSuchItemException;
 
 /**
@@ -18,17 +20,14 @@ public class DelCommand extends Command {
     }
 
     @Override
-    public void execute(Database dpc, String[] args, PasswordStorage ps, UI ui) {
+    public void execute(DatabaseControl databaseControl, String[] args, PasswordHolder passwordHolder) throws CommandException, InvalidPasswordException, NoSuchItemException{
 
         if (args.length < 2) {
-            System.out.println("Oh, poor! You should write more arguments!");
-            return;
+            throw new CommandException(CommandType.DEL, "Not enough arguments.");
         }
 
-        try {
-            dpc.delItem(args[1]);
-        } catch (NoSuchItemException e) {
-            ui.print("No such entry with \"" + e.getItemKey() + "\" link!\n");
-        }
+
+        databaseControl.delItem(args[1], passwordHolder.getPassword());
+
     }
 }

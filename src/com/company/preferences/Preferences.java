@@ -7,7 +7,7 @@ package com.company.preferences;
 
 public class Preferences {
 
-    private static final String version = "0.24";
+    private static final String version = "0.25";
     final static String dataPath = "./data.xml";
     public static final long deltaTime = 10000;
     public static Mode runmode = Mode.TEST;

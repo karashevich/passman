@@ -2,8 +2,13 @@ package com.company.commands;
 
 import com.company.Command;
 import com.company.UI;
-import com.company.security.PasswordStorage;
+import com.company.security.PasswordHolder;
 import com.company.structures.Database;
+import com.company.structures.DatabaseControl;
+import com.company.structures.Exceptions.InvalidPasswordException;
+import com.company.structures.Item;
+
+import java.util.HashSet;
 
 /**
  * Created by jetbrains on 3/18/14.
@@ -17,7 +22,19 @@ public class ShowAllCommand extends Command {
     }
 
     @Override
-    public void execute(Database dpc, String[] args, PasswordStorage ps, UI ui) {
-        System.out.println(dpc);
+    public void execute(DatabaseControl databaseControl, String[] args, PasswordHolder passwordHolder) throws InvalidPasswordException{
+
+        HashSet<Item> itemHashSet;
+
+        itemHashSet = databaseControl.getItems();
+
+        if (!itemHashSet.isEmpty()) {
+            for (Item item : itemHashSet) {
+                System.out.println(item);
+            }
+        } else {
+            System.out.println("Database is empty.");
+        }
+
     }
 }

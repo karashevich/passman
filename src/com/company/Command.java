@@ -1,8 +1,13 @@
 package com.company;
 
+import com.company.commands.CommandException;
 import com.company.commands.CommandType;
-import com.company.security.PasswordStorage;
+import com.company.security.PasswordHolder;
 import com.company.structures.Database;
+import com.company.structures.DatabaseControl;
+import com.company.structures.Exceptions.InvalidPasswordException;
+import com.company.structures.Exceptions.NoSuchItemException;
+import com.sun.tools.internal.ws.wscompile.BadCommandLineException;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -24,7 +29,7 @@ public abstract class Command {
     }
 
 
-    public abstract void execute(Database dpc, String args[], PasswordStorage ps, UI ui);
+    public abstract void execute(DatabaseControl databaseControl, String args[], PasswordHolder passwordHolder) throws CommandException, InvalidPasswordException, NoSuchItemException;
 
     public CommandType getType(){
         return cmdtype;

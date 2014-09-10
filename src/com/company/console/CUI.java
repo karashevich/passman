@@ -2,10 +2,16 @@ package com.company.console;
 
 import com.company.CommandFactory;
 import com.company.UI;
+import com.company.commands.CommandException;
 import com.company.preferences.Mode;
 import com.company.preferences.Preferences;
 import com.company.security.*;
+import com.company.structures.DatabaseControl;
 import com.company.structures.DatabaseImpl;
+import com.company.structures.Exceptions.DatabaseLoadException;
+import com.company.structures.Exceptions.InvalidPasswordException;
+import com.company.structures.Exceptions.NoSuchItemException;
+import com.thoughtworks.xstream.converters.ConversionException;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -31,11 +37,12 @@ public class CUI implements UI{
     }
 
     @Override
-    public byte[] readPassword() {
+    public byte[] readPassword(String prefix) {
 
 
         if (Preferences.runmode == Mode.TEST){
 
+            System.out.print(prefix);
             System.out.print("TESTING MODE!!! Enter your secret password:");
 
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -47,7 +54,9 @@ public class CUI implements UI{
             }
 
         } else {
+
             Console console = System.console();
+            console.printf(prefix);
 
             if (console == null) {
                 System.out.println("Couldn't get Console instance");
@@ -74,7 +83,7 @@ public class CUI implements UI{
     public  void init() {
 
         @Nullable
-        PasswordStorage ps = new PasswordStorage(null);
+        PasswordHolder passwordHolder = new PasswordHolder(null, this);
 
         System.out.println("*******************");
         System.out.println("Hello from Passman!");
@@ -85,27 +94,28 @@ public class CUI implements UI{
         System.out.println("*******************");
 
         //Loading DatabaseImpl
-        DatabaseImpl dpc;
-        System.out.print("Trying to remember everything...  ");
+        DatabaseControl databaseControl = new DatabaseControl();
 
-        dpc = new DatabaseImpl();
-        System.out.println("Ok!");
+//        System.out.print("Trying to remember everything...  ");
+//
+//        database = new DatabaseImpl();
+//        System.out.println("Ok!");
 
 
-        if (dpc.isEncrypted()) {
-            try {
-                System.out.println("My mind is encrypted, please remember your password:");
-                ps = new PasswordStorage(new Password(readPassword()));
-
-                while(!Arrays.equals(dpc.getPassHash(), ps.getPasshash())){
-                    print("Incorrect password, try again. ");
-                    ps.setPassword(readPassword());
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//        if (database.isEncrypted()) {
+//            try {
+//                System.out.println("My mind is encrypted, please remember your password:");
+//                passwordHolder = new PasswordHolder(new Password(readPassword()));
+//
+//                while(!Arrays.equals(database.getPassHash(), passwordHolder.getPasshash())){
+//                    print("Incorrect password, try again. ");
+//                    passwordHolder.setPassword(readPassword());
+//                }
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
 
         //Initialize BufferedReader to read from console.
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -125,12 +135,32 @@ public class CUI implements UI{
 
                     quit = true;
 
+                } else if (commandLine.equals(":l")){
+
+
+                    //Trying to load database here.
+                    System.out.println("Trying to load database...");
+
+                    try{
+                        databaseControl.loadDatabase(Preferences.getDataPath());
+                        System.out.println("Database has been successfully loaded.");
+                        //initialize PassHolder
+
+                        passwordHolder.setHashPassword(databaseControl.getHash());
+                        passwordHolder.getPassword();
+
+                    } catch (DatabaseLoadException dle) {
+                        System.err.println("Cannot load database: " + dle.getMessage());
+                    } catch (ConversionException ce) {
+                        System.err.println("Database file is corrupted!");
+                    }
+
                 } else {
                     if (commandLine.equals(":s")) {
 
                         try {
 
-                            //dpc.saveToFile();
+                            databaseControl.saveToFile(Preferences.getDataPath());
 
                         } catch (Exception e) {
 
@@ -140,7 +170,7 @@ public class CUI implements UI{
                             File f = new File(Preferences.getDataPath());
                             f.createNewFile();
 
-                            //dpc.saveToFile();
+                            //database.saveToFile();
                         }
 
                     } else if (commandLine.isEmpty()) {
@@ -152,7 +182,18 @@ public class CUI implements UI{
 
                         if (commandLineArray.length >= 1) {
                             String s = commandLineArray[0].substring(1);
-                            commandFactory.buildCommand(commandLineArray).execute(dpc, commandLineArray, ps, this);
+
+                            try {
+                                commandFactory.buildCommand(commandLineArray).execute(databaseControl, commandLineArray, passwordHolder);
+                            } catch (CommandException e) {
+                                print("Invalid command!\n");
+
+                            } catch (InvalidPasswordException e) {
+                                print("Invalid password!\n");
+                            } catch (NoSuchItemException e) {
+
+                                print("No such item!\n");
+                            }
 
                         } else {
                             System.out.println("Unknown command, please read the help: ?");

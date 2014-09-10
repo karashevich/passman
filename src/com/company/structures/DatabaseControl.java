@@ -7,6 +7,7 @@ import com.company.structures.Exceptions.DatabaseLoadException;
 import com.company.structures.Exceptions.InvalidPasswordException;
 import com.company.structures.Exceptions.NoSuchItemException;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,9 +60,14 @@ public class DatabaseControl {
                 }
                 everything = sb.toString();
 
-                this.database = ((DatabaseImpl) xstream.fromXML(everything));
+                try {
+                    this.database = ((DatabaseImpl) xstream.fromXML(everything));
+                } catch (ConversionException e) {
+                    throw new ConversionException(e);
+                }
 
                 br.close();
+
 
             } catch (IOException e) {
 
@@ -77,24 +83,24 @@ public class DatabaseControl {
 
     }
 
-    public void saveToFile() throws IOException{
+    public void saveToFile(String pathfile) throws IOException{
 
-//        XStream xstream = new XStream(new StaxDriver());
-//        String xml = xstream.toXML(this);
-//
-//        //Saving XML to a new file
-//        FileWriter fw = new FileWriter(pathfile);
-//        try{
-//            fw.write(xml);
-//
-//        } catch (IOException e) {
-//
-//            System.out.println("DatabaseImpl.saveToFile: IOException by saving file to " + pathfile);
-//            throw e;
-//
-//        } finally {
-//            fw.close();
-//        }
+        XStream xstream = new XStream(new StaxDriver());
+        String xml = xstream.toXML(database);
+
+        //Saving XML to a new file
+        FileWriter fw = new FileWriter(pathfile);
+        try{
+            fw.write(xml);
+
+        } catch (IOException e) {
+
+            System.out.println("DatabaseImpl.saveToFile: IOException by saving file to " + pathfile);
+            throw e;
+
+        } finally {
+            fw.close();
+        }
     }
 
 
@@ -164,6 +170,11 @@ public class DatabaseControl {
 
         }
 
+    }
+
+    @Nullable
+    public byte[] getHash(){
+        return database.getPassHash();
     }
 
 

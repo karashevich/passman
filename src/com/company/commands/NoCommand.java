@@ -2,15 +2,16 @@ package com.company.commands;
 
 import com.company.Command;
 import com.company.UI;
-import com.company.security.PasswordStorage;
+import com.company.security.PasswordHolder;
 import com.company.structures.Database;
+import com.company.structures.DatabaseControl;
 
 /**
  * Created by jetbrains on 3/18/14.
  */
 public class NoCommand extends Command {
 
-    private static final String description= "There is no command with such name";
+    private static final String description= "There is no command with such name.";
 
 
     public NoCommand() {
@@ -18,7 +19,7 @@ public class NoCommand extends Command {
     }
 
     @Override
-    public void execute(Database dpc, String[] args, PasswordStorage ps, UI ui) {
+    public void execute(DatabaseControl databaseControl, String[] args, PasswordHolder passwordHolder) {
         System.out.println(getDescription());
     }
 }

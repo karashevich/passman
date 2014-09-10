@@ -5,7 +5,7 @@ package com.company;
  */
 public interface UI {
 
-    public byte[] readPassword();
+    public byte[] readPassword(String prefix);
 
     public void init();
 
