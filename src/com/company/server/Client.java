@@ -50,10 +50,11 @@ public class Client {
 
                 byte[] originalMessage = keyboard.readLine().getBytes();
 
-                //encrypting message with RSA method
+                //Encrypting message with RSA method
 
                 final byte[] cipherText = rsa.encrypt(originalMessage, publicKey);
 
+                //Sending message to Server
                 System.out.println("Sending message...");
                 out.writeInt(cipherText.length);
                 out.write(cipherText);
@@ -71,9 +72,7 @@ public class Client {
             e.printStackTrace();
 
         } catch (IOException e) {
-
             e.printStackTrace();
-
         } catch (NoSuchPaddingException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
