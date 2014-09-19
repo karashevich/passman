@@ -22,8 +22,7 @@ public class RSAEncrypter {
     public static final String PUBLIC_KEY_FILE = "./keys/public.key";
 
     private Cipher cipher;
-    private AlgorithmParameters algorithmParameters;
-    
+
     public static void generateKey() throws IOException, NoSuchAlgorithmException {
         
         final KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ALGORITHM);
@@ -65,11 +64,6 @@ public class RSAEncrypter {
     }
 
 
-    public Cipher getCipher() {
-        return cipher;
-    }
-
-
     public RSAEncrypter() throws NoSuchPaddingException, NoSuchAlgorithmException {
 
         cipher = Cipher.getInstance(ALGORITHM);
@@ -88,17 +82,6 @@ public class RSAEncrypter {
 
     }
 
-    public byte[] decryptWithAlgParams(byte[] input, PrivateKey key) throws InvalidKeyException, BadPaddingException, IllegalBlockSizeException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-
-        byte[] decryptedText = null;
-
-
-        cipher.init(Cipher.DECRYPT_MODE, key, algorithmParameters);
-        decryptedText = cipher.doFinal(input);
-
-        return decryptedText;
-
-    }
 
 
     public static boolean areKeysPresent() {
@@ -112,22 +95,6 @@ public class RSAEncrypter {
 
     }
 
-    public RSAEncrypter(byte[] encodedAlgParameters) throws NoSuchPaddingException, NoSuchAlgorithmException, IOException {
-
-        //get object for password-based encryption
-        AlgorithmParameters algorithmParameters;
-        algorithmParameters = AlgorithmParameters.getInstance(RSAEncrypter.ALGORITHM);
-
-        //initialize with parameter encoding from above
-        algorithmParameters.init(encodedAlgParameters);
-
-    }
-
-    public byte[] getEncodedParameters() throws IOException {
-
-        return cipher.getParameters().getEncoded();
-
-    }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
 

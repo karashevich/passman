@@ -9,6 +9,7 @@ import com.company.structures.Exceptions.InvalidPasswordException;
 import com.company.structures.Item;
 
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by jetbrains on 3/18/14.
@@ -24,7 +25,7 @@ public class ShowAllCommand extends Command {
     @Override
     public void execute(DatabaseControl databaseControl, String[] args, PasswordHolder passwordHolder) throws InvalidPasswordException{
 
-        HashSet<Item> itemHashSet;
+        Set<Item> itemHashSet;
 
         itemHashSet = databaseControl.getItems();
 

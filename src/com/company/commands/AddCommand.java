@@ -5,6 +5,7 @@ import com.company.UI;
 import com.company.security.PasswordHolder;
 import com.company.structures.DatabaseControl;
 import com.company.structures.Exceptions.InvalidPasswordException;
+import com.company.structures.Exceptions.ItemWIthSuchKeyExists;
 import com.company.structures.Item;
 
 /**
@@ -27,7 +28,7 @@ public class AddCommand extends Command {
     }
 
     @Override
-    public void execute(DatabaseControl databaseControl, String[] args, PasswordHolder passwordHolder) throws CommandException, InvalidPasswordException{
+    public void execute(DatabaseControl databaseControl, String[] args, PasswordHolder passwordHolder) throws CommandException, InvalidPasswordException, ItemWIthSuchKeyExists {
 
         if (args.length < 4) {
             throw new CommandException(CommandType.ADD, "Not enough arguments.");

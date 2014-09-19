@@ -1,20 +1,14 @@
 package com.company.structures;
 
-import com.company.UI;
-import com.company.security.*;
+import com.company.structures.Exceptions.ItemWIthSuchKeyExists;
 import com.company.structures.Exceptions.NoSuchItemException;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
-import com.thoughtworks.xstream.mapper.CannotResolveClassException;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Created by jetbrains on 1/31/14.
@@ -44,23 +38,39 @@ public class DatabaseImpl implements Database {
 
 
     @Override
-    public void addItem(Item item){
+    public void addItem(Item item) throws ItemWIthSuchKeyExists {
+
+        if (data.containsKey(item.getLink())) {
+
+            throw new ItemWIthSuchKeyExists(item.getLink());
+
+        }
+
         data.put(item.getLink(), copyItem(item));
     }
 
+    @Override
+    public void addItemForce(Item item){
+
+        if (data.containsKey(item.getLink())) {
+            data.remove(item.getLink());
+        }
+
+        data.put(item.getLink(), item);
+    }
+
+    @NotNull
     @Override
     public Item getItem(String s) throws NoSuchItemException{
         if (!data.containsKey(s)) throw new NoSuchItemException(s);
         return copyItem(data.get(s));
     }
 
+    @NotNull
     @Override
-    public HashSet<Item> getItems() {
+    public Set<Item> getItems() {
 
-        HashSet<Item> hashSet = new HashSet<Item>();
-        for(Item item: data.values()) hashSet.add(copyItem(item));
-
-        return hashSet;
+        return Collections.unmodifiableSet(new HashSet<Item>(data.values()));
 
     }
 
@@ -70,10 +80,6 @@ public class DatabaseImpl implements Database {
         data.remove(s);
     }
 
-    @Override
-    public int size(){
-        return data.size();
-    }
 
 //    @Override
 //    public String toString() {
@@ -120,14 +126,13 @@ public class DatabaseImpl implements Database {
 
          DatabaseImpl databaseImpl = (DatabaseImpl) o;
 
-        if (data != null ? !data.equals(databaseImpl.data) : databaseImpl.data != null) return false;
+        return !(data != null ? !data.equals(databaseImpl.data) : databaseImpl.data != null);
 
-        return true;
     }
 
 
     @Override
-    public byte[] getPassHash() {
+    @Nullable public byte[] getPassHash() {
         return passHash;
     }
 
@@ -137,11 +142,6 @@ public class DatabaseImpl implements Database {
         isEncrypted = true;
         passHash = newPassHash;
 
-    }
-
-    @Override
-    public Iterator<Item> iterator() {
-        return data.values().iterator();
     }
 
     private Item copyItem(Item item){

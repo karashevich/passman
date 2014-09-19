@@ -5,18 +5,20 @@ import com.company.security.Hasher;
 import com.company.security.Password;
 import com.company.structures.Exceptions.DatabaseLoadException;
 import com.company.structures.Exceptions.InvalidPasswordException;
+import com.company.structures.Exceptions.ItemWIthSuchKeyExists;
 import com.company.structures.Exceptions.NoSuchItemException;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.xml.bind.NotIdentifiableEvent;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.*;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
+
 
 /**
  * Created by jetbrains on 8/21/14.
@@ -109,7 +111,7 @@ public class DatabaseControl {
      * @param item - put this item to database
      * @param password - master password
      */
-    public void addItem(Item item, Password password) throws InvalidPasswordException{
+    public void addItem(Item item, Password password) throws InvalidPasswordException, ItemWIthSuchKeyExists{
 
        if (isEncrypted()) if (passwordIsRight(password)) {
            database.addItem(Encrypter.encryptItem(item, password));
@@ -128,12 +130,14 @@ public class DatabaseControl {
      * @param password - master password
      * @return Item with given link
      */
-    public Item getItem(String link, Password password) throws InvalidPasswordException, NoSuchItemException{
+    @NotNull public Item getItem(String link, Password password) throws InvalidPasswordException, NoSuchItemException{
 
         if (isEncrypted()){
             if (passwordIsRight(password)) {
 
+                copyToClipboard(Encrypter.decryptItem(database.getItem(link), password).getPass());
                 return Encrypter.decryptItem(database.getItem(link), password);
+
 
             } else {
 
@@ -143,11 +147,10 @@ public class DatabaseControl {
 
         } else {
 
+            copyToClipboard(database.getItem(link).getPass());
             return database.getItem(link);
 
         }
-
-
     }
 
     /**
@@ -158,14 +161,19 @@ public class DatabaseControl {
 
         if (isEncrypted()) {
             if (passwordIsRight(oldPassword)) {
-                for (Item item : database)
-                    item.updatePass(Encrypter.encrypt(Encrypter.decrypt(item.getPass(), oldPassword), newPassword));
+                for (Item item : database.getItems())
+
+                    database.addItemForce(new Item(item.getLink(), item.getLogin(), Encrypter.encrypt(Encrypter.decryptItem(item, oldPassword).getPass(), newPassword)));
+
+
                 database.setPassHash(Hasher.encryptPassword(newPassword));
             } else throw new InvalidPasswordException("Old password is invalid!");
         }
         else {
 
-            for (Item item : database) item.updatePass(Encrypter.encrypt(item.getPass(), newPassword));
+            for (Item item : database.getItems()) {
+                database.addItemForce(new Item(item.getLink(), item.getLogin(), Encrypter.encrypt(item.getPass(), newPassword)));
+            }
             database.setPassHash(Hasher.encryptPassword(newPassword));
 
         }
@@ -193,22 +201,25 @@ public class DatabaseControl {
         } else {
             database.delItem(link);
         }
-
     }
 
 
     /**
      *
-     * @return  full set of items in database
+     * @return  full set of items in database with "****" instead passwords
      */
-    public HashSet<Item> getItems() throws InvalidPasswordException{
+    public Set<Item> getItems() throws InvalidPasswordException {
 
-        HashSet<Item> hashSet = new HashSet<Item>();
+//                    return Collections.unmodifiableSet(database.getItems());
+        HashSet<Item> itemsSet = new HashSet<Item>();
 
-        for(Item iterItem: database)
-            hashSet.add(new Item(iterItem.getLink(), iterItem.getLogin(), isEncrypted() ? "*******" : iterItem.getPass()));
+        for (Item item : database.getItems()) {
+            final Item tmpItem = new Item (item.getLink(), item.getLogin(), "******");
 
-        return hashSet;
+            itemsSet.add(tmpItem);
+        }
+
+        return Collections.unmodifiableSet(itemsSet);
 
     }
 
@@ -229,6 +240,18 @@ public class DatabaseControl {
      */
     private boolean passwordIsRight(@Nullable Password password) {
         return !isEncrypted() || Arrays.equals(Hasher.encryptPassword(password), database.getPassHash());
+    }
+
+    /**
+     *
+     * @param s - String to copy.
+     */
+    private void copyToClipboard(String s){
+
+        StringSelection stringSelection =  new StringSelection(s);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, null);
+
     }
 
 

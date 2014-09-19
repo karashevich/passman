@@ -2,7 +2,7 @@ package com.company.structures;
 
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,13 +12,15 @@ import org.jetbrains.annotations.Nullable;
  * To change this template use File | Settings | File Templates.
  *
  */
+
+//Immutable class
 public final class Item {
 
-    private final String link;
+    @NotNull final String link;
 
-    private final String login;
+    @NotNull final String login;
 
-    @NotNull private String pass;
+    @NotNull private final String pass;
 
     /**
      *
@@ -26,7 +28,7 @@ public final class Item {
      * @param login - login for this link
      * @param pass - pass for this login for this link
      */
-    public Item(@NotNull String link, String login, @NotNull String pass) {
+    public Item(@NotNull String link, @NotNull String login, @NotNull String pass) {
         this.link = link;
         this.login = login;
         this.pass = pass;
@@ -42,14 +44,11 @@ public final class Item {
         return login;
     }
 
-    @Nullable
+    @NotNull
     public String getPass() {
         return pass;
     }
 
-    protected void updatePass(String newPass){
-        this.pass = newPass;
-    }
 
     @Override
     public String toString() {
@@ -67,16 +66,13 @@ public final class Item {
 
         Item item = (Item) o;
 
-        if (link != null ? !link.equals(item.link) : item.link != null) return false;
-        if (!login.equals(item.login)) return false;
-        if (!pass.equals(item.pass)) return false;
+        return link.equals(item.link) && login.equals(item.login) && pass.equals(item.pass);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = link != null ? link.hashCode() : 0;
+        int result = link.hashCode();
         result = 31 * result + login.hashCode();
         result = 31 * result + pass.hashCode();
         return result;

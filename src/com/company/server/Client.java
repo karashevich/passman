@@ -3,18 +3,15 @@ package com.company.server;
 import com.company.security.RSAEncrypter;
 
 import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.security.AlgorithmParameters;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.util.Arrays;
 
 /**
  * Created by jetbrains on 9/11/14.
@@ -41,10 +38,8 @@ public class Client {
             //Initialize public key
             ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(RSAEncrypter.PUBLIC_KEY_FILE));
             final PublicKey publicKey = (PublicKey) inputStream.readObject();
-            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1PADDING");
-            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
-
+            RSAEncrypter rsa = new RSAEncrypter();
 
             BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
             String line = null;
@@ -52,15 +47,14 @@ public class Client {
             System.out.println("Type here message: ");
 
             while(true){
-                line = keyboard.readLine();
-                System.out.println("Sending message...");
+
+                byte[] originalMessage = keyboard.readLine().getBytes();
 
                 //encrypting message with RSA
 
-                byte[] originalMessage = line.getBytes();
+                final byte[] cipherText = rsa.encrypt(originalMessage, publicKey);
 
-                final byte[] cipherText = cipher.doFinal(originalMessage);
-
+                System.out.println("Sending message...");
                 out.writeInt(cipherText.length);
                 out.write(cipherText);
                 out.flush();

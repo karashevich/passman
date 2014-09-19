@@ -7,9 +7,9 @@ import com.company.preferences.Mode;
 import com.company.preferences.Preferences;
 import com.company.security.*;
 import com.company.structures.DatabaseControl;
-import com.company.structures.DatabaseImpl;
 import com.company.structures.Exceptions.DatabaseLoadException;
 import com.company.structures.Exceptions.InvalidPasswordException;
+import com.company.structures.Exceptions.ItemWIthSuchKeyExists;
 import com.company.structures.Exceptions.NoSuchItemException;
 import com.thoughtworks.xstream.converters.ConversionException;
 import org.jetbrains.annotations.Nullable;
@@ -64,7 +64,7 @@ public class CUI implements UI{
 
             }
 
-            char passwordArray[] = new char[0];
+            char passwordArray[];
             passwordArray = console.readPassword("Enter your secret password: ");
 
             while (passwordArray.length < 8) {
@@ -80,7 +80,7 @@ public class CUI implements UI{
         return null;
     }
 
-    public  void init() {
+    public void init() {
 
         @Nullable
         PasswordHolder passwordHolder = new PasswordHolder(null, this);
@@ -181,7 +181,6 @@ public class CUI implements UI{
                         String commandLineArray[] = commandLine.split(" ");
 
                         if (commandLineArray.length >= 1) {
-                            String s = commandLineArray[0].substring(1);
 
                             try {
                                 commandFactory.buildCommand(commandLineArray).execute(databaseControl, commandLineArray, passwordHolder);
@@ -193,6 +192,9 @@ public class CUI implements UI{
                             } catch (NoSuchItemException e) {
 
                                 print("No such item!\n");
+                            } catch (ItemWIthSuchKeyExists itemWIthSuchKeyExists) {
+
+                                print("Item with key \"" + itemWIthSuchKeyExists.getMessage() + "\" exists!)");
                             }
 
                         } else {

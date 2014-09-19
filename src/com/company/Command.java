@@ -6,6 +6,7 @@ import com.company.security.PasswordHolder;
 import com.company.structures.Database;
 import com.company.structures.DatabaseControl;
 import com.company.structures.Exceptions.InvalidPasswordException;
+import com.company.structures.Exceptions.ItemWIthSuchKeyExists;
 import com.company.structures.Exceptions.NoSuchItemException;
 import com.sun.tools.internal.ws.wscompile.BadCommandLineException;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +30,7 @@ public abstract class Command {
     }
 
 
-    public abstract void execute(DatabaseControl databaseControl, String args[], PasswordHolder passwordHolder) throws CommandException, InvalidPasswordException, NoSuchItemException;
+    public abstract void execute(DatabaseControl databaseControl, String args[], PasswordHolder passwordHolder) throws CommandException, InvalidPasswordException, NoSuchItemException, ItemWIthSuchKeyExists;
 
     public CommandType getType(){
         return cmdtype;
