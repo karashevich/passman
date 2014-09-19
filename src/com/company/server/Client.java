@@ -50,7 +50,7 @@ public class Client {
 
                 byte[] originalMessage = keyboard.readLine().getBytes();
 
-                //encrypting message with RSA
+                //encrypting message with RSA method
 
                 final byte[] cipherText = rsa.encrypt(originalMessage, publicKey);
 
