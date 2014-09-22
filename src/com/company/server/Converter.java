@@ -17,7 +17,7 @@ import java.util.Set;
 public class Converter {
 
     @NotNull
-    private static JSONObject itemToJSON(@NotNull Item item) throws JSONException {
+    public static JSONObject itemToJSON(@NotNull Item item) throws JSONException {
         return new JSONObject()
                 .put("link", item.getLink())
                 .put("login", item.getLogin())
@@ -25,13 +25,13 @@ public class Converter {
     }
 
     @NotNull
-    private static Item jsonToItem(@NotNull JSONObject jsonObject) throws JSONException {
+    public static Item jsonToItem(@NotNull JSONObject jsonObject) throws JSONException {
 
         return new Item(jsonObject.getString("link"), jsonObject.getString("login"),jsonObject.getString("pass"));
     }
 
     @NotNull
-    private static JSONObject itemsToJSON(@NotNull Set<Item> itemSet) throws JSONException {
+    public static JSONObject itemsToJSON(@NotNull Set<Item> itemSet) throws JSONException {
 
         JSONArray jsonArray = new JSONArray();
         for (Item item : itemSet) {
@@ -42,7 +42,7 @@ public class Converter {
     }
 
     @NotNull
-    private static Set<Item> jsonToItems(@NotNull JSONObject jsonObject) throws JSONException {
+    public static Set<Item> jsonToItems(@NotNull JSONObject jsonObject) throws JSONException {
 
         JSONArray jsonArray = jsonObject.getJSONArray("items");
         HashSet<Item> resultSet = new HashSet<Item>();
@@ -53,8 +53,6 @@ public class Converter {
 
         return resultSet;
     }
-
-
 
     public static void main(String[] args) throws JSONException {
 
