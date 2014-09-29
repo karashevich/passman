@@ -14,17 +14,52 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.crypto.*;
-import java.net.*;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.*;
-import java.security.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 
 /**
  * Created by jetbrains on 9/11/14.
  */
-public class Server{
+public class RunnableServer implements Runnable{
 
-    static DatabaseControl databaseControl;
+    private DatabaseControl databaseControl;
+    private int port;
+
+    public RunnableServer(DatabaseControl databaseControl, int port) {
+
+        this.databaseControl = databaseControl;
+        this.port = port;
+    }
+
+    public void run(){
+        try {
+            startNode(port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     private static void log(String s, int port){
         System.out.println(">>" + port + ": " +s);
@@ -35,34 +70,34 @@ public class Server{
     }
 
 
-    public static void main(String[] args) throws InvalidAlgorithmParameterException, IOException, NoSuchItemException, CommandException, InvalidPasswordException, ItemWIthSuchKeyExists, JSONException {
+//    public static void main(String[] args) throws InvalidAlgorithmParameterException, IOException, NoSuchItemException, CommandException, InvalidPasswordException, ItemWIthSuchKeyExists, JSONException {
+//
+//        try {
+//
+//            log("******PASSMAN SERVER******");
+//            initDatabaseControl();
+//
+//
+//            startNode(1234);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IllegalBlockSizeException e) {
+//            e.printStackTrace();
+//        } catch (BadPaddingException e) {
+//            e.printStackTrace();
+//        } catch (NoSuchPaddingException e) {
+//            e.printStackTrace();
+//        } catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        } catch (InvalidKeyException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-        try {
-
-            log("******PASSMAN SERVER******");
-            initDatabaseControl();
-
-
-            startNode(1234);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void startNode(int port) throws IOException, ClassNotFoundException, NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, JSONException {
+    private void startNode(int port) throws IOException, ClassNotFoundException, NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, JSONException {
 
         log("Starting new server node on port: " + port, port);
         ServerSocket ss = new ServerSocket(port);
@@ -106,7 +141,7 @@ public class Server{
 //
 //    }
 
-    private static String readMessage(DataInputStream din, RSAEncrypter rsaEncrypter, PrivateKey privateKey, int port) throws IOException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+    private String readMessage(DataInputStream din, RSAEncrypter rsaEncrypter, PrivateKey privateKey, int port) throws IOException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
 
         int length = din.readInt();
         byte[] recievedMessage = null;
@@ -123,7 +158,7 @@ public class Server{
 
     }
 
-    private static JSONObject executeCommand(String commandString) throws JSONException {
+    private JSONObject executeCommand(String commandString) throws JSONException {
 
 
         JSONObject jsonObject = new JSONObject(commandString);
@@ -153,28 +188,28 @@ public class Server{
         }
     }
 
-    private static void initDatabaseControl(){
+//    private void initDatabaseControl(){
+//
+//        log("Initializing...");
+//        databaseControl = new DatabaseControl();
+//        log("Database has been initialized.");
+//
+//
+//        //Loading database
+//        System.out.println("Loading database...");
+//        try{
+//            databaseControl.loadDatabase(Preferences.getDataPath());
+//            log("Database has been successfully loaded.");
+//
+//        } catch (DatabaseLoadException dle) {
+//            log("Cannot load database: " + dle.getMessage());
+//        } catch (ConversionException ce) {
+//            log("Database file is corrupted!");
+//        }
+//
+//    }
 
-        log("Initializing...");
-        databaseControl = new DatabaseControl();
-        log("Database has been initialized.");
-
-
-        //Loading database
-        System.out.println("Loading database...");
-        try{
-            databaseControl.loadDatabase(Preferences.getDataPath());
-            log("Database has been successfully loaded.");
-
-        } catch (DatabaseLoadException dle) {
-            log("Cannot load database: " + dle.getMessage());
-        } catch (ConversionException ce) {
-            log("Database file is corrupted!");
-        }
-
-    }
-
-    private static void saveDC() throws IOException {
+    private void saveDC() throws IOException {
 
         try {
 
@@ -195,5 +230,5 @@ public class Server{
     }
 
 
-    
+
 }

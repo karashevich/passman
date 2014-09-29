@@ -5,6 +5,7 @@ import com.company.structures.Item;
 import org.jetbrains.annotations.NotNull;
 import org.json.*;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,6 +53,19 @@ public class Converter {
         }
 
         return resultSet;
+    }
+
+    public static byte[] jsonArrToByteArr(JSONArray jsonArray) throws JSONException {
+
+        final byte[] result = new byte[jsonArray.length()];
+        for (int i = 0; i < jsonArray.length(); i++) {
+
+            result[i] = (Byte) jsonArray.get(i);
+
+        }
+
+        return result;
+
     }
 
     public static void main(String[] args) throws JSONException {

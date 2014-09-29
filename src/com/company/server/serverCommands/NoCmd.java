@@ -1,10 +1,9 @@
 package com.company.server.serverCommands;
 
-import com.company.security.PasswordHolder;
+import com.company.server.CmCnsts;
 import com.company.structures.DatabaseControl;
 import com.company.structures.Exceptions.InvalidPasswordException;
 import com.company.structures.Exceptions.ItemWIthSuchKeyExists;
-import com.company.structures.Item;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,7 +20,7 @@ public class NoCmd extends ServerCommand{
     public JSONObject execute(DatabaseControl databaseControl, JSONObject args) throws JSONException, ItemWIthSuchKeyExists, InvalidPasswordException {
 
 
-        return new JSONObject().put("answer", "nocommand");
+        return new JSONObject().put(CmCnsts.answer, "nocommand");
 
     }
 

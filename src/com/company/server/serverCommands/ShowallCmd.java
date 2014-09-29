@@ -1,7 +1,7 @@
 package com.company.server.serverCommands;
 
 import com.company.commands.CommandException;
-import com.company.security.PasswordHolder;
+import com.company.server.CmCnsts;
 import com.company.server.Converter;
 import com.company.structures.DatabaseControl;
 import com.company.structures.Exceptions.InvalidPasswordException;
@@ -23,7 +23,7 @@ public class ShowallCmd extends ServerCommand{
     @Override
     public JSONObject execute(DatabaseControl databaseControl, JSONObject input) throws CommandException, InvalidPasswordException, NoSuchItemException, ItemWIthSuchKeyExists, JSONException {
 
-        return new JSONObject().put("answer", "ok").put("data", Converter.itemsToJSON(databaseControl.getItems()));
+        return new JSONObject().put(CmCnsts.answer, CmCnsts.ok).put(CmCnsts.data, Converter.itemsToJSON(databaseControl.getItems()));
 
     }
 

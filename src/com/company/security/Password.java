@@ -1,7 +1,9 @@
 package com.company.security;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -12,7 +14,7 @@ public class Password {
     @NotNull
     private byte[] password;
 
-    public Password(@NotNull byte[] password) {
+    public Password(@Nullable byte[] password) {
         this.password = password;
     }
 

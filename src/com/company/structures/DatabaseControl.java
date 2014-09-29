@@ -113,7 +113,8 @@ public class DatabaseControl {
      */
     public void addItem(Item item, Password password) throws InvalidPasswordException, ItemWIthSuchKeyExists{
 
-       if (isEncrypted()) if (passwordIsRight(password)) {
+       //TODO: Password required;
+       if (isEncrypted()) if ((password!=null) && passwordIsRight(password)) {
            database.addItem(Encrypter.encryptItem(item, password));
        } else {
            throw new InvalidPasswordException("Invalid password!");

@@ -1,5 +1,6 @@
 package com.company.server.serverCommands;
 
+import com.company.server.CmCnsts;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,7 +15,7 @@ public class ServerCommandFactory {
     public ServerCommand buildCommand(JSONObject jsonObject) throws JSONException {
 
 
-        String stringCommnad = jsonObject.getString("command");
+        String stringCommnad = jsonObject.getString(CmCnsts.command);
 
         //detecting type of command. In bad case it is "null"
         @Nullable ServerCommandType cmdtype = null;
@@ -43,6 +44,12 @@ public class ServerCommandFactory {
 
                 case DEL:
                     return new DelCmd();
+
+                case CHECKPASS:
+                    return new ChckpassCmd();
+
+                case SETPASS:
+                    return new SetpassCmd();
             }
         }
 

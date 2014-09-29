@@ -50,6 +50,11 @@ public class PasswordHolder {
 
     public void setPassword(Password newPassword){
         this.password = newPassword;
+        if (newPassword != null) {
+            this.hashPassword = Hasher.encryptPassword(newPassword.getPassword());
+        } else {
+            this.hashPassword = null;
+        }
         this.timestamp = System.currentTimeMillis();
     }
 

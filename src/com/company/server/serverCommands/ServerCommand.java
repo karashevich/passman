@@ -14,6 +14,7 @@ import org.json.JSONObject;
  */
 public abstract class ServerCommand {
 
+
     private ServerCommandType cmdtype = null;
 
     public ServerCommand(@NotNull ServerCommandType cmdtype){

@@ -14,4 +14,12 @@ public class ServerCommandException extends Exception{
         this.commandType = commandType;
         this.message = message;
     }
+
+    public ServerCommandType getCommandType() {
+        return commandType;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }

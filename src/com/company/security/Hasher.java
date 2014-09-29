@@ -73,7 +73,7 @@ public class Hasher {
         byte[] b1 = s1.getBytes();
         byte[] b2 = s2.getBytes();
 
-        System.out.println("s1 hash:" + Arrays.toString(Hasher.encryptPassword(b1)));
+        System.out.println("s1 hash:" + new String(Hasher.encryptPassword(b1)));
         System.out.println("s2 hash:" + Arrays.toString(Hasher.encryptPassword(b2)));
     }
 

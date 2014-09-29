@@ -11,4 +11,8 @@ public class ClientCommandException extends Exception{
     public ClientCommandException(String message) {
         super(message);
     }
+
+    public ServerCommandType getCommandType() {
+        return commandType;
+    }
 }
