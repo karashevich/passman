@@ -58,11 +58,26 @@ public class ServerStarter {
             threads[i] = new Thread(runnableServer[i]);
         }
 
+
+
         for (Thread thread : threads) {
             thread.start();
         }
 
-
+        while(true) {
+            for (int i = 0; i < runnableServer.length; i++) {
+                if (!threads[i].isAlive()){
+                    try {
+                        threads[i].join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    threads[i] = new Thread(new RunnableServer(databaseControl, (initialPort + i)));
+                    threads[i].start();
+                    System.err.println("Thread on port \"" + (initialPort + i) + "\" has been recovered!");
+                }
+            }
+        }
 
     }
 }

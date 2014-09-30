@@ -42,8 +42,6 @@ public class RunnableServer implements Runnable{
     public void run(){
         try {
             startNode(port);
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (NoSuchPaddingException e) {
@@ -97,43 +95,85 @@ public class RunnableServer implements Runnable{
 //        }
 //    }
 
-    private void startNode(int port) throws IOException, ClassNotFoundException, NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, JSONException {
+    private void startNode(int port) throws  ClassNotFoundException, NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, JSONException {
 
-        log("Starting new server node on port: " + port, port);
-        ServerSocket ss = new ServerSocket(port);
-        log("Waiting for a clients...", port);
+        ServerSocket ss = null;
+        Socket socket = null;
 
-        Socket socket = ss.accept();
-        log("Client has been connected!", port);
+        try {
+            log("Starting new server node on port: " + port, port);
+            ss = new ServerSocket(port);
+            log("Waiting for a clients...", port);
 
-        InputStream sin = socket.getInputStream();
-        OutputStream sout = socket.getOutputStream();
+            socket = ss.accept();
+            log("Client has been connected!", port);
 
-        DataInputStream in = new DataInputStream(sin);
-        DataOutputStream out = new DataOutputStream(sout);
+            InputStream sin = socket.getInputStream();
+            OutputStream sout = socket.getOutputStream();
 
-        //Initialize RSAKey
-        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(RSAEncrypter.PRIVATE_KEY_FILE));
-        final PrivateKey privateKey = (PrivateKey) inputStream.readObject();
+            DataInputStream in = new DataInputStream(sin);
+            DataOutputStream out = new DataOutputStream(sout);
 
-        RSAEncrypter rsa = new RSAEncrypter();
-        String result;
+            //Initialize RSAKey
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(RSAEncrypter.PRIVATE_KEY_FILE));
+            final PrivateKey privateKey = (PrivateKey) inputStream.readObject();
 
-        while(true){
+            RSAEncrypter rsa = new RSAEncrypter();
+            String result;
 
-            String message = readMessage(in, rsa, privateKey, port);
-            result = executeCommand(message).toString();
-            saveDC();
+            while(true){
 
-            log("Answering...", port);
+                String message = readMessage(in, rsa, privateKey, port);
+                result = executeCommand(message).toString();
+                saveDC();
 
-            log("Answer: " + result, port);
-            out.writeUTF(result);
-            out.flush();
+                log("Answering...", port);
 
-            System.out.println("Waiting for the next command...");
-            System.out.println();
+                log("Answer: " + result, port);
+                out.writeUTF(result);
+                out.flush();
+
+                System.out.println("Waiting for the next command...");
+                System.out.println();
+            }
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (socket != null) {
+                try {
+                    socket.close();
+                    System.err.println("SOCKET CLOSED");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (ss != null) {
+                try {
+                    ss.close();
+                    System.err.println("SERVERSOCKET CLOSED");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
+
     }
 
 
